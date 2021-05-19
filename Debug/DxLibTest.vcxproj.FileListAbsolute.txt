@@ -1,0 +1,2 @@
+D:\program\DxLibrary\DxLibTest\Debug\DxLibTest.exe
+D:\program\DxLibrary\DxLibTest\Debug\DxLibTest.pdb
