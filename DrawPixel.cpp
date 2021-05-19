@@ -6,32 +6,32 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine
 		return -1;//エラーが起きたら直ちに終了
 	}
 
-	//描画先を裏画面にする
 	SetDrawScreen(DX_SCREEN_BACK);
 
-	int x = 0, y = 0;
-	while(1) {
-		//画面に描かれているものを一回全部消す
+
+	int BallGraph = LoadGraph("img/ball.png");
+	int BallX = -64, BallY = 0;
+
+	int SquareGraph = LoadGraph("img/square.png");
+	int SquareX = 640, SquareY = 300;
+
+	for (int i = 0; i < 400; i++) {
 		ClearDrawScreen();
 
-		if (CheckHitKey(KEY_INPUT_LEFT) == 1) x -= 8;
-		if (CheckHitKey(KEY_INPUT_RIGHT) == 1) x += 8;
-		if (CheckHitKey(KEY_INPUT_UP) == 1) y -= 8;
-		if (CheckHitKey(KEY_INPUT_DOWN) == 1) y += 8;
+		BallX += 3;
 
-		LoadGraphScreen(x,y, "img/JK.png", FALSE);
+		DrawGraph(BallX, BallY, BallGraph, FALSE);
 
-		//裏画面の内容を表画面に反映させる
+		SquareX -= 3;
+		SquareY -= 2;
+
+		DrawGraph(SquareX, SquareY, SquareGraph, FALSE);
+
 		ScreenFlip();
 
-		WaitTimer(20);
-
-		//Windowsからの命令がエラーなら即時終了
-		//手を加えなければ永遠にループするようなプログラムにはループの中に一つはこの処理を加える必要がある。
-		if (ProcessMessage() == -1) break;
-
-		if (CheckHitKey(KEY_INPUT_ESCAPE) == 1) break;
+		if (ProcessMessage() < 0) break;
 	}
+
 	DxLib_End(); //DXライブラリ使用の終了処理
 
 	return 0;
