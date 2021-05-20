@@ -1,7 +1,13 @@
 #include"DxLib.h"
+#include<vector>
 
-void UpdatePlayer(int* PlayerX, int* PlayerY, int PlayerGraph, int ShotGraph, int* ShotX, int* ShotY, int* ShotFlag);
-void UpdateEnemy(int* EnemyX, int* EnemyY, int EnemyGraph, int* EnemyDir);
+#define SHOTSIZE 10
+
+void UpdatePlayer(int& PlayerX, int& PlayerY, int PlayerGraph, int ShotGraph, std::vector<int>& ShotX, std::vector<int>& ShotY, std::vector<int>& ShotFlag, int& ShotBFlag);
+void UpdateEnemy(int& EnemyX, int& EnemyY, int EnemyGraph, int& EnemyDir);
+void UpdateShotState(int PlayerGraph, int PlayerX, int PlayerY, int ShotGraph, int& ShotX, int& ShotY, int& ShotFlag);
+void UpdateShotView(int ShotGraph, int& ShotX, int& ShotY, int& ShotFlag);
+
 
 //プログラムはWinMainから始まる。
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine, int nCmdShow) {
@@ -24,15 +30,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine
 	int EnemyDir = 1;
 
 	int ShotGraph = LoadGraph("img/Shot.png");
-	int ShotFlag = 0;
-	int ShotX = 0, ShotY = 0;
+	std::vector<int> ShotX(SHOTSIZE), ShotY(SHOTSIZE), ShotFlag(SHOTSIZE);
+	int ShotBFlag = 0;
 
 	while (1) {
 		ClearDrawScreen();
 
-		UpdatePlayer(&PlayerX, &PlayerY, PlayerGraph, ShotGraph, &ShotX, &ShotY, &ShotFlag);
+		
+		UpdatePlayer(PlayerX, PlayerY, PlayerGraph, ShotGraph, ShotX, ShotY, ShotFlag,ShotBFlag);
 
-		UpdateEnemy(&EnemyX, &EnemyY, EnemyGraph, &EnemyDir);
+		UpdateEnemy(EnemyX, EnemyY, EnemyGraph, EnemyDir);
 
 		ScreenFlip();
 
@@ -45,59 +52,86 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine
 	return 0;
 }
 
-void UpdatePlayer(int* PlayerX, int* PlayerY, int PlayerGraph, int ShotGraph, int* ShotX,int* ShotY,int* ShotFlag){
+void UpdatePlayer(int& PlayerX, int& PlayerY, int PlayerGraph, int ShotGraph, std::vector<int>& ShotX, std::vector<int>& ShotY, std::vector<int>& ShotFlag,int& ShotBFlag){
 
-	if (CheckHitKey(KEY_INPUT_UP) == 1) *PlayerY -= 3;
-	if (CheckHitKey(KEY_INPUT_DOWN) == 1) *PlayerY += 3;
-	if (CheckHitKey(KEY_INPUT_LEFT) == 1) *PlayerX -= 3;
-	if (CheckHitKey(KEY_INPUT_RIGHT) == 1) *PlayerX += 3;
+	if (CheckHitKey(KEY_INPUT_UP) == 1) PlayerY -= 3;
+	if (CheckHitKey(KEY_INPUT_DOWN) == 1) PlayerY += 3;
+	if (CheckHitKey(KEY_INPUT_LEFT) == 1) PlayerX -= 3;
+	if (CheckHitKey(KEY_INPUT_RIGHT) == 1) PlayerX += 3;
 
-	if (*PlayerX < 0) *PlayerX = 0;
-	if (*PlayerX > 640 - 64) *PlayerX = 640 - 64;
+	if (PlayerX < 0) PlayerX = 0;
+	if (PlayerX > 640 - 64) PlayerX = 640 - 64;
 
-	if (*PlayerY < 0) *PlayerY = 0;
-	if (*PlayerY > 480 - 64) *PlayerY = 480 - 64;
+	if (PlayerY < 0) PlayerY = 0;
+	if (PlayerY > 480 - 64) PlayerY = 480 - 64;
 
-	DrawGraph(*PlayerX, *PlayerY, PlayerGraph, FALSE);
+	DrawGraph(PlayerX, PlayerY, PlayerGraph, TRUE);
 
-	if (CheckHitKey(KEY_INPUT_SPACE) == 1
-		&& *ShotFlag == 0) {
-		int Pw, Ph, Sw, Sh;
-
-		GetGraphSize(PlayerGraph, &Pw, &Ph);
-		GetGraphSize(ShotGraph, &Sw, &Sh);
-
-		*ShotX = (Pw - Sw) / 2 + *PlayerX;
-		*ShotY = (Ph - Sh) / 2 + *PlayerY;
-
-		*ShotFlag = 1;
+	if (CheckHitKey(KEY_INPUT_SPACE) == 1) {
+		if (ShotBFlag == 0) {
+			for (size_t i = 0; i < ShotFlag.size(); i++) {
+				if (ShotFlag[i] == 0) {
+					UpdateShotState(PlayerGraph, PlayerX, PlayerY, ShotGraph, ShotX[i], ShotY[i], ShotFlag[i]);
+					break;
+				}
+			}
+			ShotBFlag = 1;
+		}
+		else {
+			ShotBFlag = 0;
+		}
+		
 	}
 
-	if (*ShotFlag == 1) {
-		*ShotY -= 16;
-		if (*ShotY < -80) {
-			*ShotFlag = 0;
+	for (size_t i = 0; i < ShotFlag.size(); i++) {
+		if (ShotFlag[i]) {
+			UpdateShotView(ShotGraph, ShotX[i], ShotY[i], ShotFlag[i]);
+			if (i == 9)	UpdateShotView(ShotGraph, ShotX[i], ShotY[i], PlayerGraph);
+		}
+	}
+
+	
+}
+
+void UpdateShotState(int PlayerGraph, int PlayerX, int PlayerY, int ShotGraph, int& ShotX, int& ShotY,int& ShotFlag) {
+	int Pw, Ph, Sw, Sh;
+
+	GetGraphSize(PlayerGraph, &Pw, &Ph);
+	GetGraphSize(ShotGraph, &Sw, &Sh);
+
+	ShotX = (Pw - Sw) / 2 + PlayerX;
+	ShotY = (Ph - Sh) / 2 + PlayerY;
+
+	ShotFlag = 1;
+}
+
+
+void UpdateShotView(int ShotGraph, int& ShotX, int& ShotY, int& ShotFlag) {
+	if (ShotFlag == 1) {
+		ShotY -= 16;
+		if (ShotY < -80) {
+ 			ShotFlag = 0;
 		}
 
-		DrawGraph(*ShotX, *ShotY, ShotGraph, FALSE);
+		DrawGraph(ShotX, ShotY, ShotGraph, TRUE);
 	}
 }
 
-void UpdateEnemy(int* EnemyX, int* EnemyY, int EnemyGraph,int* EnemyDir) {
-	if (*EnemyDir == 1) *EnemyX += 3;
-	if (*EnemyDir == 0) *EnemyX -= 3;
+void UpdateEnemy(int& EnemyX, int& EnemyY, int EnemyGraph,int& EnemyDir) {
+	if (EnemyDir == 1) EnemyX += 3;
+	if (EnemyDir == 0) EnemyX -= 3;
 
-	if (*EnemyX > 640 - 64)
+	if (EnemyX > 640 - 64)
 	{
-		*EnemyX = 640 - 64;
-		*EnemyDir = 0;
+		EnemyX = 640 - 64;
+		EnemyDir = 0;
 	}
 
-	if (*EnemyX < 0)
+	if (EnemyX < 0)
 	{
-		*EnemyX = 0;
-		*EnemyDir = 1;
+		EnemyX = 0;
+		EnemyDir = 1;
 	}
 
-	DrawGraph(*EnemyX, *EnemyY, EnemyGraph, FALSE);
+	DrawGraph(EnemyX, EnemyY, EnemyGraph, TRUE);
 }
