@@ -1,12 +1,13 @@
 #include"DxLib.h"
+#include"Character.hpp"
 #include<vector>
 
 #define SHOTSIZE 10
 
-void UpdatePlayer(int& PlayerX, int& PlayerY, int PlayerGraph, int ShotGraph, std::vector<int>& ShotX, std::vector<int>& ShotY, std::vector<int>& ShotFlag, int& ShotBFlag);
-void UpdateEnemy(int& EnemyX, int& EnemyY, int EnemyGraph, int& EnemyDir);
-void UpdateShotState(int PlayerGraph, int PlayerX, int PlayerY, int ShotGraph, int& ShotX, int& ShotY, int& ShotFlag);
-void UpdateShotView(int ShotGraph, int& ShotX, int& ShotY, int& ShotFlag);
+void UpdatePlayer(Player* player, std::vector<Shot>& shots,int& shotBflag);
+void UpdateEnemy(Enemy* enemy);
+void UpdateShotState(Player* player,Shot& shot);
+void UpdateShotView(Shot& shot);
 
 
 //プログラムはWinMainから始まる。
@@ -21,25 +22,20 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine
 	SetDrawScreen(DX_SCREEN_BACK);
 
 
-	int PlayerGraph = LoadGraph("img/PlayerImg.png");
-	int PlayerX = 288, PlayerY = 400;
+	Player* player = new Player(288, 400, LoadGraph("img/PlayerImg.png"));
 
-	int EnemyGraph = LoadGraph("img/EnemyImg.png");
-	int EnemyX = 0, EnemyY = 50;
+	Enemy* enemy = new Enemy(0, 50, LoadGraph("img/EnemyImg.png"), 1);
 
-	int EnemyDir = 1;
-
-	int ShotGraph = LoadGraph("img/Shot.png");
-	std::vector<int> ShotX(SHOTSIZE), ShotY(SHOTSIZE), ShotFlag(SHOTSIZE);
-	int ShotBFlag = 0;
+	std::vector<Shot> shots(SHOTSIZE, Shot(0, 0, LoadGraph("img/Shot.png"), 0));
+	int shotBflag = 0;
 
 	while (1) {
 		ClearDrawScreen();
 
 		
-		UpdatePlayer(PlayerX, PlayerY, PlayerGraph, ShotGraph, ShotX, ShotY, ShotFlag,ShotBFlag);
+		UpdatePlayer(player, shots, shotBflag);
 
-		UpdateEnemy(EnemyX, EnemyY, EnemyGraph, EnemyDir);
+		UpdateEnemy(enemy);
 
 		ScreenFlip();
 
@@ -52,26 +48,26 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine
 	return 0;
 }
 
-void UpdatePlayer(int& PlayerX, int& PlayerY, int PlayerGraph, int ShotGraph, std::vector<int>& ShotX, std::vector<int>& ShotY, std::vector<int>& ShotFlag,int& ShotBFlag){
+void UpdatePlayer(Player* player, std::vector<Shot>& shots,int& ShotBFlag) {
 
-	if (CheckHitKey(KEY_INPUT_UP) == 1) PlayerY -= 3;
-	if (CheckHitKey(KEY_INPUT_DOWN) == 1) PlayerY += 3;
-	if (CheckHitKey(KEY_INPUT_LEFT) == 1) PlayerX -= 3;
-	if (CheckHitKey(KEY_INPUT_RIGHT) == 1) PlayerX += 3;
+	if (CheckHitKey(KEY_INPUT_UP) == 1) player->setY(player->getY() - 3);
+	if (CheckHitKey(KEY_INPUT_DOWN) == 1) player->setY(player->getY() + 3);
+	if (CheckHitKey(KEY_INPUT_LEFT) == 1) player->setX(player->getX() - 3);
+	if (CheckHitKey(KEY_INPUT_RIGHT) == 1) player->setX(player->getX() + 3);
 
-	if (PlayerX < 0) PlayerX = 0;
-	if (PlayerX > 640 - 64) PlayerX = 640 - 64;
+	if (player->getX() < 0) player->setX(0); 
+	if (player->getX() > 640 - 64) player->setX(640 - 64);
 
-	if (PlayerY < 0) PlayerY = 0;
-	if (PlayerY > 480 - 64) PlayerY = 480 - 64;
+	if (player->getY() < 0) player->setY(0);
+	if (player->getY() > 480 - 64) player->setY(480 - 64);
 
-	DrawGraph(PlayerX, PlayerY, PlayerGraph, TRUE);
+	DrawGraph(player->getX(), player->getY(), player->getGraph(), TRUE);
 
 	if (CheckHitKey(KEY_INPUT_SPACE) == 1) {
 		if (ShotBFlag == 0) {
-			for (size_t i = 0; i < ShotFlag.size(); i++) {
-				if (ShotFlag[i] == 0) {
-					UpdateShotState(PlayerGraph, PlayerX, PlayerY, ShotGraph, ShotX[i], ShotY[i], ShotFlag[i]);
+			for (size_t i = 0; i < shots.size(); i++) {
+				if (shots[i].getFlag() == 0) {
+					UpdateShotState(player,shots[i]);
 					break;
 				}
 			}
@@ -80,58 +76,58 @@ void UpdatePlayer(int& PlayerX, int& PlayerY, int PlayerGraph, int ShotGraph, st
 		else {
 			ShotBFlag = 0;
 		}
-		
 	}
 
-	for (size_t i = 0; i < ShotFlag.size(); i++) {
-		if (ShotFlag[i]) {
-			UpdateShotView(ShotGraph, ShotX[i], ShotY[i], ShotFlag[i]);
-			if (i == 9)	UpdateShotView(ShotGraph, ShotX[i], ShotY[i], PlayerGraph);
+	for (size_t i = 0; i < shots.size(); i++) {
+		if (shots[i].getFlag() == 1) {
+			UpdateShotView(shots[i]);
 		}
 	}
-
-	
 }
 
-void UpdateShotState(int PlayerGraph, int PlayerX, int PlayerY, int ShotGraph, int& ShotX, int& ShotY,int& ShotFlag) {
+void UpdateShotState(Player* player, Shot& shot) {
 	int Pw, Ph, Sw, Sh;
 
-	GetGraphSize(PlayerGraph, &Pw, &Ph);
-	GetGraphSize(ShotGraph, &Sw, &Sh);
+	GetGraphSize(player->getGraph(), &Pw, &Ph);
+	GetGraphSize(shot.getGraph(), &Sw, &Sh);
 
-	ShotX = (Pw - Sw) / 2 + PlayerX;
-	ShotY = (Ph - Sh) / 2 + PlayerY;
+	shot.setX((Pw - Sw) / 2 + player->getX());
+	shot.setY((Ph - Sh) / 2 + player->getY());
 
-	ShotFlag = 1;
+	shot.setFlag(1);
 }
 
 
-void UpdateShotView(int ShotGraph, int& ShotX, int& ShotY, int& ShotFlag) {
-	if (ShotFlag == 1) {
-		ShotY -= 16;
-		if (ShotY < -80) {
- 			ShotFlag = 0;
+void UpdateShotView(Shot& shot) {
+	if (shot.getFlag() == 1) {
+		shot.setY(shot.getY() - 16);
+		if (shot.getY() < -80) {
+			shot.setFlag(0);
 		}
 
-		DrawGraph(ShotX, ShotY, ShotGraph, TRUE);
+		DrawGraph(shot.getX(), shot.getY(), shot.getFlag(), TRUE);
 	}
 }
 
-void UpdateEnemy(int& EnemyX, int& EnemyY, int EnemyGraph,int& EnemyDir) {
-	if (EnemyDir == 1) EnemyX += 3;
-	if (EnemyDir == 0) EnemyX -= 3;
+void UpdateEnemy(Enemy* enemy) {
+	int EnemyDir = enemy->getDir();
+	int EnemyX = enemy->getX();
+	int EnemyY = enemy->getY();
 
-	if (EnemyX > 640 - 64)
+	if (EnemyDir == 1) enemy->setX(enemy->getX() + 3);
+	if (EnemyDir == 0) enemy->setX(enemy->getX() - 3);
+
+	if (enemy->getX() > 640 - 64)
 	{
-		EnemyX = 640 - 64;
-		EnemyDir = 0;
+		enemy->setX(640 - 64);
+		enemy->setDir(0);
 	}
 
-	if (EnemyX < 0)
+	if (enemy->getX() < 0)
 	{
-		EnemyX = 0;
-		EnemyDir = 1;
+		enemy->setX(0);
+		enemy->setDir(1);
 	}
 
-	DrawGraph(EnemyX, EnemyY, EnemyGraph, TRUE);
+	DrawGraph(enemy->getX(), enemy->getY(), enemy->getGraph(), TRUE);
 }
