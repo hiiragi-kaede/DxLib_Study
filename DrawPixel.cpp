@@ -8,7 +8,9 @@ void UpdatePlayer(Player* player, std::vector<Shot*> shots,int& shotBflag);
 void UpdateEnemy(Enemy* enemy);
 void UpdateShotState(Player* player,Shot* shot);
 void UpdateShotView(Shot* shot);
+void UpdateEnemyShotView(Shot* shot);
 void HitCheck(Enemy* enemy, std::vector<Shot*> shots);
+
 
 
 //プログラムはWinMainから始まる。
@@ -25,7 +27,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine
 
 	Player* player = new Player(288, 400, LoadGraph("img/PlayerImg.png"));
 
-	Enemy* enemy = new Enemy(0, 50, LoadGraph("img/EnemyImg.png"), 1, 0, 0, LoadGraph("img/EnemyInDmg.png"));
+	Shot* es = new Shot(0, 0, LoadGraph("img/EnemyShot.png"), 0);
+	Enemy* enemy = new Enemy(0, 50, LoadGraph("img/EnemyImg.png"), 1, 0, 0, LoadGraph("img/EnemyInDmg.png"), es, 0);
 
 	std::vector<Shot*> shots;
 	for (int i = 0; i < SHOTSIZE; i++) {
@@ -115,12 +118,23 @@ void UpdateShotView(Shot* shot) {
 	}
 }
 
+void UpdateEnemyShotView(Shot* shot) {
+	if (shot->getFlag() == 1) {
+		shot->setY(shot->getY() + 8);
+		if (shot->getY() > 480) {
+			shot->setFlag(0);
+		}
+
+		DrawGraph(shot->getX(), shot->getY(), shot->getGraph(), TRUE);
+	}
+}
+
 void UpdateEnemy(Enemy* enemy) {
 	int EnemyDir = enemy->getDir();
 	int EnemyX = enemy->getX();
 	int EnemyY = enemy->getY();
 
-	if (enemy->getDamageFlag() == 1) {
+	if (enemy->getDamageFlag() == 1) {//ダメージアニメーション中
 		DrawGraph(enemy->getX(), enemy->getY(), enemy->getDamageGraph(), TRUE);
 
 		enemy->setDamageCounter(enemy->getDamageCounter() + 1);
@@ -146,7 +160,25 @@ void UpdateEnemy(Enemy* enemy) {
 		}
 
 		DrawGraph(enemy->getX(), enemy->getY(), enemy->getGraph(), TRUE);
+
+		enemy->setShotCounter(enemy->getShotCounter() + 1);
+
+		if (enemy->getShotCounter() == 60) {
+			if (enemy->getShot()->getFlag() == 0) {
+				int esW, esH, EneW, EneH;
+				GetGraphSize(enemy->getGraph(), &EneW, &EneH);
+				GetGraphSize(enemy->getShot()->getGraph(), &esW, &esH);
+
+				enemy->getShot()->setX(enemy->getX() + EneW / 2 - esW / 2);
+				enemy->getShot()->setY(enemy->getY() + EneH / 2 - esH / 2);
+
+				enemy->getShot()->setFlag(1);
+				enemy->setShotCounter(0);
+			}
+		}
 	}
+
+	UpdateEnemyShotView(enemy->getShot());
 }
 
 void HitCheck(Enemy* enemy, std::vector<Shot*> shots) {

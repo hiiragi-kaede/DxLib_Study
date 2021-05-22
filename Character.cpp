@@ -25,9 +25,8 @@ void Character::setY(int y) {
 //ここが問題の場所
 //ShotにShot型を引数に取るコンストラクタは作ってないですが、それ以前に「shotはクラスenemyの静的でないデータ メンバーまたは基底クラスではありません」
 //というエラーが出てます
-Enemy::Enemy(int x, int y, int graph, int dir, int dFlag, int dCounter, int dGraph, Shot es,int esCounter) :
-	Character(x, y, graph), dir(dir), damageFlag(dFlag), damageCounter(dCounter), damageGraph(dGraph),Shot(es),shotCounter(esCounter){
-}
+Enemy::Enemy(int x, int y, int graph, int dir, int dFlag, int dCounter, int dGraph, Shot es, int sCounter) :
+	Character(x, y, graph), dir(dir), damageFlag(dFlag), damageCounter(dCounter), damageGraph(dGraph), shot(es), shotCounter(sCounter) {}
 
 int Enemy::getDir() {
 	return Enemy::dir;
@@ -63,7 +62,31 @@ int Enemy::getDamageGraph()
 	return this->damageGraph;
 }
 
+Shot* Enemy::getShot()
+{
+	return &(this->shot);
+}
+
+void Enemy::setShot(Shot shot)
+{
+	this->shot = shot;
+}
+
+int Enemy::getShotCounter()
+{
+	return this->shotCounter;
+}
+
+void Enemy::setShotCounter(int count)
+{
+	this->shotCounter = count;
+}
+
 Shot::Shot(int x, int y, int graph, int flag) : Character(x, y, graph), flag(flag) {}
+
+Shot::Shot() : Character(0, 0, 0), flag(0) {}
+
+Shot::Shot(Shot* s) : Character(s->getX(), s->getY(), s->getGraph()), flag(s->getFlag()) {}
 
 int Shot::getFlag() {
 	return Shot::flag;

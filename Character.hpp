@@ -26,6 +26,7 @@ class Shot :public Character {
 	public:
 		Shot(int x, int y, int graph, int flag);
 		Shot();
+		Shot(Shot* s);
 		int getFlag();
 		void setFlag(int flag);
 };
@@ -40,7 +41,7 @@ class Enemy :public Character{
 		int shotCounter;
 
 	public:
-		Enemy(int x, int y, int graph, int dir, int dFlag, int dCounter, int dGraph, Shot es,int esCounter);
+		Enemy(int x, int y, int graph, int dir, int dFlag, int dCounter, int dGraph, Shot es, int sCounter);
 		int getDir();
 		void setDir(int dir);
 		int getDamageFlag();
@@ -48,7 +49,9 @@ class Enemy :public Character{
 		int getDamageCounter();
 		void setDamageCounter(int damageCounter);
 		int getDamageGraph();
-		Shot getShot();
+		Shot* getShot();
 		void setShot(Shot shot);
+		int getShotCounter();
+		void setShotCounter(int count);
 };
 
