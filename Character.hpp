@@ -1,6 +1,6 @@
 #pragma once
 class Character {
-	protected:
+	private:
 		int x, y;
 		int graph;
 
@@ -19,22 +19,36 @@ public:
 	using Character::Character;
 };
 
-class Enemy :public Character{
-	private:
-		int dir;
-
-	public:
-		Enemy(int x,int y,int graph,int dir);
-		int getDir();
-		void setDir(int dir);
-};
-
-class Shot :public Character{
+class Shot :public Character {
 	private:
 		int flag;
 
 	public:
 		Shot(int x, int y, int graph, int flag);
+		Shot();
 		int getFlag();
 		void setFlag(int flag);
 };
+
+class Enemy :public Character{
+	private:
+		int dir;
+		int damageFlag;
+		int damageCounter;
+		int damageGraph;
+		Shot shot;
+		int shotCounter;
+
+	public:
+		Enemy(int x, int y, int graph, int dir, int dFlag, int dCounter, int dGraph, Shot es,int esCounter);
+		int getDir();
+		void setDir(int dir);
+		int getDamageFlag();
+		void setDamageFlag(int damageFlag);
+		int getDamageCounter();
+		void setDamageCounter(int damageCounter);
+		int getDamageGraph();
+		Shot getShot();
+		void setShot(Shot shot);
+};
+

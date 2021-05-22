@@ -25,7 +25,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine
 
 	Player* player = new Player(288, 400, LoadGraph("img/PlayerImg.png"));
 
-	Enemy* enemy = new Enemy(0, 50, LoadGraph("img/EnemyImg.png"), 1);
+	Enemy* enemy = new Enemy(0, 50, LoadGraph("img/EnemyImg.png"), 1, 0, 0, LoadGraph("img/EnemyInDmg.png"));
 
 	std::vector<Shot*> shots;
 	for (int i = 0; i < SHOTSIZE; i++) {
@@ -120,22 +120,33 @@ void UpdateEnemy(Enemy* enemy) {
 	int EnemyX = enemy->getX();
 	int EnemyY = enemy->getY();
 
-	if (EnemyDir == 1) enemy->setX(enemy->getX() + 3);
-	if (EnemyDir == 0) enemy->setX(enemy->getX() - 3);
+	if (enemy->getDamageFlag() == 1) {
+		DrawGraph(enemy->getX(), enemy->getY(), enemy->getDamageGraph(), TRUE);
 
-	if (enemy->getX() > 640 - 64)
-	{
-		enemy->setX(640 - 64);
-		enemy->setDir(0);
+		enemy->setDamageCounter(enemy->getDamageCounter() + 1);
+
+		if (enemy->getDamageCounter() == 30) {
+			enemy->setDamageFlag(0);
+		}
 	}
+	else {//ダメージアニメーション中でなければ
+		if (EnemyDir == 1) enemy->setX(enemy->getX() + 3);
+		if (EnemyDir == 0) enemy->setX(enemy->getX() - 3);
 
-	if (enemy->getX() < 0)
-	{
-		enemy->setX(0);
-		enemy->setDir(1);
+		if (enemy->getX() > 640 - 64)
+		{
+			enemy->setX(640 - 64);
+			enemy->setDir(0);
+		}
+
+		if (enemy->getX() < 0)
+		{
+			enemy->setX(0);
+			enemy->setDir(1);
+		}
+
+		DrawGraph(enemy->getX(), enemy->getY(), enemy->getGraph(), TRUE);
 	}
-
-	DrawGraph(enemy->getX(), enemy->getY(), enemy->getGraph(), TRUE);
 }
 
 void HitCheck(Enemy* enemy, std::vector<Shot*> shots) {
@@ -152,6 +163,9 @@ void HitCheck(Enemy* enemy, std::vector<Shot*> shots) {
 
 				//接触した場合弾は消える
 				shot->setFlag(0);
+
+				enemy->setDamageFlag(1);
+				enemy->setDamageCounter(0);
 			}
 		}
 	}
