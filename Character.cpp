@@ -22,10 +22,7 @@ void Character::setY(int y) {
 	this->y = y;
 }
 
-//ここが問題の場所
-//ShotにShot型を引数に取るコンストラクタは作ってないですが、それ以前に「shotはクラスenemyの静的でないデータ メンバーまたは基底クラスではありません」
-//というエラーが出てます
-Enemy::Enemy(int x, int y, int graph, int dir, int dFlag, int dCounter, int dGraph, Shot es, int sCounter) :
+Enemy::Enemy(int x, int y, int graph, int dir, int dFlag, int dCounter, int dGraph, EnemyShot* es, int sCounter) :
 	Character(x, y, graph), dir(dir), damageFlag(dFlag), damageCounter(dCounter), damageGraph(dGraph), shot(es), shotCounter(sCounter) {}
 
 int Enemy::getDir() {
@@ -62,12 +59,12 @@ int Enemy::getDamageGraph()
 	return this->damageGraph;
 }
 
-Shot* Enemy::getShot()
+EnemyShot* Enemy::getShot()
 {
 	return &(this->shot);
 }
 
-void Enemy::setShot(Shot shot)
+void Enemy::setShot(EnemyShot shot)
 {
 	this->shot = shot;
 }
@@ -95,4 +92,29 @@ int Shot::getFlag() {
 void Shot::setFlag(int flag)
 {
 	this->flag = flag;
+}
+
+EnemyShot::EnemyShot(int x, int y, int graph, int flag):
+	Shot(x,y,graph,flag),dx(0),dy(0){}
+
+EnemyShot::EnemyShot(EnemyShot* es) : Shot(es->getX(),es->getY(),es->getGraph(),es->getFlag()),dx(0),dy(0) {}
+
+double EnemyShot::getDx()
+{
+	return this->dx;
+}
+
+void EnemyShot::setDx(double dx)
+{
+	this->dx = dx;
+}
+
+double EnemyShot::getDy()
+{
+	return this->dy;
+}
+
+void EnemyShot::setDy(double dy)
+{
+	this->dy = dy;
 }
