@@ -3,12 +3,16 @@ class Character {
 	private:
 		int x, y;
 		int graph;
+		int hitW, hitH;
 
 	public:
-		Character(int x, int y, int graph);
+		Character(int x, int y, int graph,int hitSize);
+		Character(int x, int y, int graph, int hitW, int hitH);
 		int getX();
 		int getY();
 		int getGraph();
+		int getHitW();
+		int getHitH();
 		void setX(int x);
 		void setY(int y);
 };
@@ -24,7 +28,8 @@ class Shot :public Character {
 		int flag;
 
 	public:
-		Shot(int x, int y, int graph, int flag);
+		Shot(int x, int y, int graph, int hitW, int hitH, int flag);
+		Shot(int x, int y, int graph, int hitSize, int flag);
 		Shot();
 		Shot(Shot* s);
 		int getFlag();
@@ -36,7 +41,8 @@ class EnemyShot :public Shot {
 		double dx;
 		double dy;
 	public:
-		EnemyShot(int x, int y, int graph, int flag);
+		EnemyShot(int x, int y, int graph, int hitW, int hitH, int flag);
+		EnemyShot(int x, int y, int graph, int hitSize, int flag);
 		EnemyShot(EnemyShot* es);
 		double getDx();
 		void setDx(double dx);
@@ -54,7 +60,8 @@ class Enemy :public Character{
 		int shotCounter;
 
 	public:
-		Enemy(int x, int y, int graph, int dir, int dFlag, int dCounter, int dGraph, EnemyShot* es, int sCounter);
+		Enemy(int x, int y, int graph, int hitW, int hitH, int dir, int dFlag, int dCounter, int dGraph, EnemyShot* es, int sCounter);
+		Enemy(int x, int y, int graph, int hitSize, int dir, int dFlag, int dCounter, int dGraph, EnemyShot* es, int sCounter);
 		int getDir();
 		void setDir(int dir);
 		int getDamageFlag();

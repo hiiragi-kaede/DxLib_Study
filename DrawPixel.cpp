@@ -25,16 +25,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine
 	SetDrawScreen(DX_SCREEN_BACK);
 
 
-	Player* player = new Player(288, 400, LoadGraph("img/PlayerImg.png"));
+	Player* player = new Player(288, 400, LoadGraph("img/PlayerImg.png"), 64);
 
-	EnemyShot* es = new EnemyShot(0, 0, LoadGraph("img/EnemyShot.png"), 0);
-	Enemy* enemy = new Enemy(0, 50, LoadGraph("img/EnemyImg.png"),
+	EnemyShot* es = new EnemyShot(0, 0, LoadGraph("img/EnemyShot.png"), 10, 0);
+	Enemy* enemy = new Enemy(0, 50, LoadGraph("img/EnemyImg.png"), 64,
 		1, 0, 0, LoadGraph("img/EnemyInDmg.png"),
 		es, 0);
 
 	std::vector<Shot*> shots;
 	for (int i = 0; i < SHOTSIZE; i++) {
-		shots.push_back(new Shot(0, 0, LoadGraph("img/Shot.png"), 0));
+		shots.push_back(new Shot(0, 0, LoadGraph("img/Shot.png"), 10, 0));
 	}
 	int shotBflag = 0;
 
@@ -208,8 +208,10 @@ void EnemyShotCtrl(Enemy* enemy, Player* player) {
 
 void HitCheck(Enemy* enemy, std::vector<Shot*> shots) {
 	int EneW, EneH, SW, SH;
-	GetGraphSize(enemy->getGraph(), &EneW, &EneH);
-	GetGraphSize(shots[0]->getGraph(), &SW, &SH);
+	EneW = enemy->getHitW();
+	EneH = enemy->getHitH();
+	SW = shots[0]->getHitW();
+	SH = shots[0]->getHitH();
 
 	for (auto shot : shots) {
 		if (shot->getFlag() == 1) {
