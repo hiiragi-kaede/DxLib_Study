@@ -28,7 +28,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine
 	Player* player = new Player(288, 400, LoadGraph("img/PlayerImg.png"), 64);
 
 	EnemyShot* es = new EnemyShot(0, 0, LoadGraph("img/EnemyShot.png"), 10, 0);
-	Enemy* enemy = new Enemy(0, 50, LoadGraph("img/EnemyImg.png"), 64,
+	Enemy* enemy = new Enemy(0, 50, LoadGraph("img/EnemyImg.png"), 50,
 		1, 0, 0, LoadGraph("img/EnemyInDmg.png"),
 		es, 0);
 
@@ -213,12 +213,21 @@ void HitCheck(Enemy* enemy, std::vector<Shot*> shots) {
 	SW = shots[0]->getHitW();
 	SH = shots[0]->getHitH();
 
+	int EGraphW, EGraphH, SGraphW, SGraphH;
+	GetGraphSize(enemy->getGraph(), &EGraphW, &EGraphH);
+	GetGraphSize(shots[0]->getGraph(), &SGraphW, &SGraphH);
+
 	for (auto shot : shots) {
 		if (shot->getFlag() == 1) {
-			if (((shot->getX() > enemy->getX() && shot->getX() < enemy->getX()+ EneW) ||
-				(enemy->getX() > shot->getX() && enemy->getX() < shot->getX() + SW)) &&
-				((shot->getY() > enemy->getY() && shot->getY() < enemy->getY() + EneH) ||
-				(enemy->getY() > shot->getY() && enemy->getY() < shot->getY() + SH))) {
+			int EneCenterX = enemy->getX() + EGraphW / 2;
+			int EneCenterY = enemy->getY() + EGraphH / 2;
+			int ShotCenterX = shot->getX() + SGraphW / 2;
+			int ShotCenterY = shot->getY() + SGraphH / 2;
+
+			if (!((EneCenterX - EneW / 2 > ShotCenterX + SW / 2) ||
+				(ShotCenterX - SW / 2 > EneCenterX + EneW / 2)) &&
+				!((EneCenterY - EneH / 2 > ShotCenterY + SH / 2) ||
+				(ShotCenterY - SH / 2 > EneCenterY + EneH / 2))) {
 
 				//ÚG‚µ‚½ê‡’e‚ÍÁ‚¦‚é
 				shot->setFlag(0);
