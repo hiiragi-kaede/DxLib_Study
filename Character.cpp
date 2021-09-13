@@ -1,4 +1,5 @@
 #include"Character.hpp";
+#include"DxLib.h"
 
 Character::Character(int x, int y, int graph, int hitSize) : x(x), y(y), graph(graph), hitH(hitSize), hitW(hitSize) {}
 
@@ -24,6 +25,17 @@ int Character::getHitW()
 int Character::getHitH()
 {
 	return Character::hitH;
+}
+
+HitBox Character::getHitBox()
+{
+	int GraphW, GraphH;
+	GetGraphSize(Character::getGraph(), &GraphW, &GraphH);
+	int W = Character::getHitW();
+	int H = Character::getHitH();
+	int Left = Character::getX() + GraphW / 2 - W / 2;
+	int Up = Character::getY() + GraphH / 2 - H / 2;
+	return HitBox(Left, Up, W, H);
 }
 
 void Character::setX(int x) {
@@ -138,3 +150,5 @@ void EnemyShot::setDy(double dy)
 {
 	this->dy = dy;
 }
+
+HitBox::HitBox(int Left, int Up, int W, int H) : Left(Left),Up(Up),W(W),H(H){}

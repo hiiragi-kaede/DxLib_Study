@@ -207,27 +207,15 @@ void EnemyShotCtrl(Enemy* enemy, Player* player) {
 }
 
 void HitCheck(Enemy* enemy, std::vector<Shot*> shots) {
-	int EneW, EneH, SW, SH;
-	EneW = enemy->getHitW();
-	EneH = enemy->getHitH();
-	SW = shots[0]->getHitW();
-	SH = shots[0]->getHitH();
-
-	int EGraphW, EGraphH, SGraphW, SGraphH;
-	GetGraphSize(enemy->getGraph(), &EGraphW, &EGraphH);
-	GetGraphSize(shots[0]->getGraph(), &SGraphW, &SGraphH);
-
 	for (auto shot : shots) {
 		if (shot->getFlag() == 1) {
-			int EneCenterX = enemy->getX() + EGraphW / 2;
-			int EneCenterY = enemy->getY() + EGraphH / 2;
-			int ShotCenterX = shot->getX() + SGraphW / 2;
-			int ShotCenterY = shot->getY() + SGraphH / 2;
+			HitBox EneHitBox = enemy->getHitBox();
+			HitBox ShotHitBox = shot->getHitBox();
 
-			if (!((EneCenterX - EneW / 2 > ShotCenterX + SW / 2) ||
-				(ShotCenterX - SW / 2 > EneCenterX + EneW / 2)) &&
-				!((EneCenterY - EneH / 2 > ShotCenterY + SH / 2) ||
-				(ShotCenterY - SH / 2 > EneCenterY + EneH / 2))) {
+			if (((EneHitBox.Left>ShotHitBox.Left && EneHitBox.Left < ShotHitBox.Left + ShotHitBox.W) ||
+				(ShotHitBox.Left > EneHitBox.Left && ShotHitBox.Left < EneHitBox.Left + EneHitBox.W)) &&
+				((EneHitBox.Up > ShotHitBox.Up && EneHitBox.Up < ShotHitBox.Up + ShotHitBox.H) ||
+				(ShotHitBox.Up > EneHitBox.Up && ShotHitBox.Up < EneHitBox.Up + EneHitBox.H))) {
 
 				//ÚG‚µ‚½ê‡’e‚ÍÁ‚¦‚é
 				shot->setFlag(0);

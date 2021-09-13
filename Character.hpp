@@ -1,4 +1,12 @@
 #pragma once
+
+class HitBox {
+public:
+	int Left, Up;
+	int W, H;
+	HitBox(int Left, int Up, int W, int H);
+};
+
 class Character {
 	private:
 		int x, y;
@@ -13,6 +21,7 @@ class Character {
 		int getGraph();
 		int getHitW();
 		int getHitH();
+		HitBox getHitBox();
 		void setX(int x);
 		void setY(int y);
 };
