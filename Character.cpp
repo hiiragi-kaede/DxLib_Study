@@ -1,6 +1,8 @@
 #include"Character.hpp";
 #include"DxLib.h"
 
+HitBox::HitBox(int Left, int Up, int W, int H) : Left(Left), Up(Up), W(W), H(H) {}
+
 Character::Character(int x, int y, int graph, int hitSize) : x(x), y(y), graph(graph), hitH(hitSize), hitW(hitSize) {}
 
 Character::Character(int x, int y, int graph, int hitW, int hitH) : x(x), y(y), graph(graph), hitW(hitW), hitH(hitH) {}
@@ -150,5 +152,3 @@ void EnemyShot::setDy(double dy)
 {
 	this->dy = dy;
 }
-
-HitBox::HitBox(int Left, int Up, int W, int H) : Left(Left),Up(Up),W(W),H(H){}

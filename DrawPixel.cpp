@@ -2,6 +2,7 @@
 #include"Character.hpp"
 #include<vector>
 #include<math.h>
+#include"util.hpp"
 
 #define SHOTSIZE 10
 
@@ -72,7 +73,7 @@ void UpdatePlayer(Player* player, std::vector<Shot*> shots, int& ShotBFlag) {
 	if (player->getY() < 0) player->setY(0);
 	if (player->getY() > 480 - 64) player->setY(480 - 64);
 
-	DrawGraph(player->getX(), player->getY(), player->getGraph(), TRUE);
+	util::DrawRotaGraph(player->getX(), player->getY(), 1.0, 0, player->getGraph(), TRUE);
 
 	if (CheckHitKey(KEY_INPUT_SPACE) == 1) {
 		if (ShotBFlag == 0) {
