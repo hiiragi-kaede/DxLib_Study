@@ -3,6 +3,13 @@
 
 HitBox::HitBox(int Left, int Up, int W, int H) : Left(Left), Up(Up), W(W), H(H) {}
 
+bool HitBoxCheck(HitBox a, HitBox b) {
+	return ((a.Left > b.Left && a.Left < b.Left + b.W) ||
+		(b.Left > a.Left && b.Left < a.Left + a.W)) &&
+		((a.Up > b.Up && a.Up < b.Up + b.H) ||
+			(b.Up > a.Up && b.Up < a.Up + a.H));
+}
+
 Character::Character(int x, int y, int graph, int hitSize) : x(x), y(y), graph(graph), hitH(hitSize), hitW(hitSize) {}
 
 Character::Character(int x, int y, int graph, int hitW, int hitH) : x(x), y(y), graph(graph), hitW(hitW), hitH(hitH) {}
@@ -46,6 +53,11 @@ void Character::setX(int x) {
 
 void Character::setY(int y) {
 	this->y = y;
+}
+
+Player* Player::Instantiate()
+{
+	return new Player(288, 400, LoadGraph("img/PlayerImg.png"), 64);
 }
 
 Enemy::Enemy(int x, int y, int graph, int hitW, int hitH, int dir, int dFlag, int dCounter, int dGraph, EnemyShot* es, int sCounter):
@@ -152,3 +164,5 @@ void EnemyShot::setDy(double dy)
 {
 	this->dy = dy;
 }
+
+

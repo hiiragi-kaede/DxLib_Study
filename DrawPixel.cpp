@@ -26,7 +26,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine
 	SetDrawScreen(DX_SCREEN_BACK);
 
 
-	Player* player = new Player(288, 400, LoadGraph("img/PlayerImg.png"), 64);
+	Player* player = Player::Instantiate();
 
 	EnemyShot* es = new EnemyShot(0, 0, LoadGraph("img/EnemyShot.png"), 10, 0);
 	Enemy* enemy = new Enemy(0, 50, LoadGraph("img/EnemyImg.png"), 50,
@@ -213,10 +213,7 @@ void HitCheck(Enemy* enemy, std::vector<Shot*> shots) {
 			HitBox EneHitBox = enemy->getHitBox();
 			HitBox ShotHitBox = shot->getHitBox();
 
-			if (((EneHitBox.Left>ShotHitBox.Left && EneHitBox.Left < ShotHitBox.Left + ShotHitBox.W) ||
-				(ShotHitBox.Left > EneHitBox.Left && ShotHitBox.Left < EneHitBox.Left + EneHitBox.W)) &&
-				((EneHitBox.Up > ShotHitBox.Up && EneHitBox.Up < ShotHitBox.Up + ShotHitBox.H) ||
-				(ShotHitBox.Up > EneHitBox.Up && ShotHitBox.Up < EneHitBox.Up + EneHitBox.H))) {
+			if (HitBoxCheck(EneHitBox,ShotHitBox)) {
 
 				//ÚG‚µ‚½ê‡’e‚ÍÁ‚¦‚é
 				shot->setFlag(0);

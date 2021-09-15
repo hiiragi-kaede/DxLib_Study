@@ -1,11 +1,13 @@
 #pragma once
 
 class HitBox {
-public:
-	int Left, Up;
-	int W, H;
-	HitBox(int Left, int Up, int W, int H);
+	public:
+		int Left, Up;
+		int W, H;
+		HitBox(int Left, int Up, int W, int H);
 };
+
+bool HitBoxCheck(HitBox a, HitBox b);
 
 class Character {
 	private:
@@ -30,6 +32,7 @@ class Player :public Character{
 public:
 	//継承コンストラクタ
 	using Character::Character;
+	static Player* Instantiate();
 };
 
 class Shot :public Character {
