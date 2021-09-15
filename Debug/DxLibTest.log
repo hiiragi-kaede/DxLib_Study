@@ -1,5 +1,2 @@
-﻿  Character.cpp
-D:\program\DxLibrary\DxLibTest\Character.cpp(1,9): warning C4067: プリプロセッサ ディレクティブの後に余分な文字がありました - 改行が必要です
-  DrawPixel.cpp
-  コードを生成中...
+﻿  Main.cpp
   DxLibTest.vcxproj -> D:\program\DxLibrary\DxLibTest\Debug\DxLibTest.exe

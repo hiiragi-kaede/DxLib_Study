@@ -32,7 +32,6 @@ class Player :public Character{
 public:
 	//継承コンストラクタ
 	using Character::Character;
-	static Player* Instantiate();
 };
 
 class Shot :public Character {

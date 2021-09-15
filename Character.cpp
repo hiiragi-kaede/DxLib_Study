@@ -55,11 +55,6 @@ void Character::setY(int y) {
 	this->y = y;
 }
 
-Player* Player::Instantiate()
-{
-	return new Player(288, 400, LoadGraph("img/PlayerImg.png"), 64);
-}
-
 Enemy::Enemy(int x, int y, int graph, int hitW, int hitH, int dir, int dFlag, int dCounter, int dGraph, EnemyShot* es, int sCounter):
 	Character(x, y, graph, hitW, hitH), dir(dir), damageFlag(dFlag), damageCounter(dCounter), damageGraph(dGraph), shot(es), shotCounter(sCounter) {}
 
