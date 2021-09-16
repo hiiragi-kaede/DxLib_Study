@@ -160,4 +160,23 @@ void EnemyShot::setDy(double dy)
 	this->dy = dy;
 }
 
+Player::Player(int x, int y, int graph, int hitSize, int MaxHP) : Character(x, y, graph, hitSize), MaxHP(MaxHP), HP(MaxHP) {}
 
+Player::Player(int x, int y, int graph, int hitW, int hitH, int MaxHP) : Character(x, y, graph, hitW, hitH), MaxHP(MaxHP), HP(MaxHP) {}
+
+int Player::getHP()
+{
+	return Player::HP;
+}
+
+void Player::DecreaseHP(int damage)
+{
+	this->HP -= damage;
+	if (this->HP < 0) this->HP = 0;
+}
+
+void Player::IncreaseHP(int heal)
+{
+	this->HP += heal;
+	if (this->HP > this->MaxHP) this->HP = this->MaxHP;
+}

@@ -29,9 +29,15 @@ class Character {
 };
 
 class Player :public Character{
-public:
-	//継承コンストラクタ
-	using Character::Character;
+	private:
+		int MaxHP;
+		int HP;
+	public:
+		Player(int x, int y, int graph, int hitSize, int MaxHP);
+		Player(int x, int y, int graph, int hitW, int hitH, int MaxHP);
+		int getHP();
+		void DecreaseHP(int damage);
+		void IncreaseHP(int heal);
 };
 
 class Shot :public Character {

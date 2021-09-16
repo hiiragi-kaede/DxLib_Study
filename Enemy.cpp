@@ -6,6 +6,8 @@
 
 static EnemyShot* es;
 static Enemy* enemy;
+//ƒvƒŒƒCƒ„[‚Ö‚ÌUŒ‚—Í
+static const int attack = 1;
 
 void ene::Instantiate() {
 	es = new EnemyShot(0, 0, LoadGraph("img/EnemyShot.png"), 10, 0);
@@ -18,24 +20,25 @@ void ene::Update()
 {
 	Player* player = pl::getPlayer();
 	std::vector<Shot*> shots = pl::getShots();
-	UpdateEnemy(enemy, player);
-	HitCheck(enemy, shots);
+	UpdateEnemy(player);
+	HitCheck(shots);
+	AttackPlayer(player);
 }
 
-void UpdateEnemyShotView(EnemyShot* shot) {
-	if (shot->getFlag() == 1) {
-		shot->setX(int(shot->getX() + shot->getDx()));
-		shot->setY(int(shot->getY() + shot->getDy()));
-		if (shot->getY() > 480 || shot->getY() < 0 ||
-			shot->getX() > 640 || shot->getX() < 0) {
-			shot->setFlag(0);
+void UpdateEnemyShotView() {
+	if (es->getFlag() == 1) {
+		es->setX(int(es->getX() + es->getDx()));
+		es->setY(int(es->getY() + es->getDy()));
+		if (es->getY() > 480 || es->getY() < 0 ||
+			es->getX() > 640 || es->getX() < 0) {
+			es->setFlag(0);
 		}
 
-		DrawGraph(shot->getX(), shot->getY(), shot->getGraph(), TRUE);
+		DrawGraph(es->getX(), es->getY(), es->getGraph(), TRUE);
 	}
 }
 
-void UpdateEnemy(Enemy* enemy, Player* player) {
+void UpdateEnemy(Player* player) {
 	int EnemyDir = enemy->getDir();
 	int EnemyX = enemy->getX();
 	int EnemyY = enemy->getY();
@@ -67,27 +70,27 @@ void UpdateEnemy(Enemy* enemy, Player* player) {
 
 		DrawGraph(enemy->getX(), enemy->getY(), enemy->getGraph(), TRUE);
 
-		EnemyShotCtrl(enemy, player);
+		EnemyShotCtrl(player);
 	}
-	UpdateEnemyShotView(enemy->getShot());
+	UpdateEnemyShotView();
 }
 
-void EnemyShotCtrl(Enemy* enemy, Player* player) {
+void EnemyShotCtrl(Player* player) {
 	enemy->setShotCounter(enemy->getShotCounter() + 1);
 
 	if (enemy->getShotCounter() == 60) {
-		if (enemy->getShot()->getFlag() == 0) {
+		if (es->getFlag() == 0) {
 			int esW, esH, EneW, EneH;
 			GetGraphSize(enemy->getGraph(), &EneW, &EneH);
 			GetGraphSize(enemy->getShot()->getGraph(), &esW, &esH);
 
-			enemy->getShot()->setX(enemy->getX() + EneW / 2 - esW / 2);
-			enemy->getShot()->setY(enemy->getY() + EneH / 2 - esH / 2);
+			es->setX(enemy->getX() + EneW / 2 - esW / 2);
+			es->setY(enemy->getY() + EneH / 2 - esH / 2);
 
 			//’e‚ÌˆÚ“®‘¬“x‚ğİ’è‚·‚é
 			double sb, sbx, sby, bx, by, sx, sy;
-			sx = enemy->getShot()->getX() + esW / 2.0;
-			sy = enemy->getShot()->getY() + esH / 2.0;
+			sx = es->getX() + esW / 2.0;
+			sy = es->getY() + esH / 2.0;
 
 			int Pw, Ph;
 			GetGraphSize(player->getGraph(), &Pw, &Ph);
@@ -99,16 +102,31 @@ void EnemyShotCtrl(Enemy* enemy, Player* player) {
 
 			sb = sqrt(sbx * sbx + sby * sby);
 
-			enemy->getShot()->setDx(sbx / sb * 8);
-			enemy->getShot()->setDy(sby / sb * 8);
+			es->setDx(sbx / sb * 8);
+			es->setDy(sby / sb * 8);
 
-			enemy->getShot()->setFlag(1);
+			es->setFlag(1);
 		}
 		enemy->setShotCounter(0);
 	}
 }
 
-void HitCheck(Enemy* enemy, std::vector<Shot*> shots) {
+void AttackPlayer(Player* player)
+{
+	if (es->getFlag() == 1) {
+		HitBox PlayerHitBox = player->getHitBox();
+		HitBox EShotHitBox = es->getHitBox();
+
+		if (HitBoxCheck(PlayerHitBox, EShotHitBox)) {
+			//ÚG‚µ‚½ê‡’e‚ÍÁ‚¦‚é
+			es->setFlag(0);
+
+			player->DecreaseHP(attack);
+		}
+	}
+}
+
+void HitCheck(std::vector<Shot*> shots) {
 	for (auto shot : shots) {
 		if (shot->getFlag() == 1) {
 			HitBox EneHitBox = enemy->getHitBox();

@@ -2,17 +2,20 @@
 #include"Character.hpp"
 #include"DxLib.h"
 #include"util.hpp"
+#include<iostream>
+#include<string>
 
 static Player* player;
 static std::vector<Shot*> shots;
 static int shotBflag = 0;
 static const int move_speed = 3;
 static const int shot_size = 10;
-static const int player_hitbox_size = 64;
+static const int player_hitbox_size = 32;
 static const int shot_hitbox_size = 10;
+static const int max_hp = 3;
 
 void pl::Instantiate() {
-	player = new Player(288, 400, LoadGraph("img/PlayerImg.png"), player_hitbox_size);
+	player = new Player(288, 400, LoadGraph("img/PlayerImg.png"), player_hitbox_size, max_hp);
 	for (int i = 0; i < shot_size; i++) {
 		shots.push_back(new Shot(0, 0, LoadGraph("img/Shot.png"), shot_hitbox_size, 0));
 	}
@@ -20,6 +23,7 @@ void pl::Instantiate() {
 
 void pl::Update() {
 	UpdatePlayer();
+	UpdateHPView();
 }
 
 Player* pl::getPlayer()
@@ -91,5 +95,15 @@ void UpdateShotView(Shot* shot) {
 
 		DrawGraph(shot->getX(), shot->getY(), shot->getGraph(), TRUE);
 	}
+}
+
+void UpdateHPView()
+{
+	//”’F‚Ì’l‚ðŽæ“¾
+	unsigned int Cr = GetColor(255, 255, 255);
+
+	std::string tmp = "HP:" + std::to_string(player->getHP());
+	char const* hp_char = tmp.c_str();
+	DrawString(0, 0, hp_char, Cr);
 }
 

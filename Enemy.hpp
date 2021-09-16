@@ -10,7 +10,8 @@ namespace ene {
 	void Update();
 }
 
-void UpdateEnemy(Enemy* enemy, Player* player);
-void UpdateEnemyShotView(EnemyShot* shot);
-void HitCheck(Enemy* enemy, std::vector<Shot*> shots);
-void EnemyShotCtrl(Enemy* enemy, Player* player);
+void UpdateEnemy(Player* player);
+void UpdateEnemyShotView();
+void HitCheck(std::vector<Shot*> shots);
+void EnemyShotCtrl(Player* player);
+void AttackPlayer(Player* player);
