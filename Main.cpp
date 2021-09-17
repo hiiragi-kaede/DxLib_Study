@@ -5,6 +5,7 @@
 #include"util.hpp"
 #include"Player.hpp"
 #include"Enemy.hpp"
+#include"GameMaster.hpp"
 
 //プログラムはWinMainから始まる。
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine, int nCmdShow) {
@@ -17,16 +18,25 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine
 
 	SetDrawScreen(DX_SCREEN_BACK);
 
-	pl::Instantiate();
-
-	ene::Instantiate();
-
 	while (1) {
 		ClearDrawScreen();
 		
-		pl::Update();
+		switch (master::GetGameState())
+		{
+		case master::GameState::Title:
+			master::drawTitleScene();
+			master::Update();
+			break;
+		case master::GameState::Game:
+			pl::Update();
 
-		ene::Update();
+			ene::Update();
+
+			util::EscToTitle();
+			break;
+		default:
+			break;
+		}
 
 		ScreenFlip();
 
