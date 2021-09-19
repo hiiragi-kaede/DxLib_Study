@@ -13,3 +13,4 @@ void UpdatePlayer();
 void UpdateShotState(Shot* shot);
 void UpdateShotView(Shot* shot);
 void UpdateHPView();
+void CheckGameOver();

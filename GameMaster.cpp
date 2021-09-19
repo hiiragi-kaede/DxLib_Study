@@ -35,7 +35,8 @@ void master::drawTitleOptions()
 void master::Update()
 {
 	master::CheckGameStart();
-	master::CheckTitleSelect();
+	master::UpdateTitleSelect();
+	master::ExitGame();
 }
 
 master::GameState master::GetGameState()
@@ -50,14 +51,14 @@ void master::SetGameState(master::GameState state)
 
 void master::CheckGameStart()
 {
-	if (CheckHitKey(KEY_INPUT_SPACE)) {
+	if (CheckHitKey(KEY_INPUT_SPACE) && SelectedOption == 0) {
 		SetGameState(master::GameState::Game);
 		pl::Instantiate();
 		ene::Instantiate();
 	}
 }
 
-void master::CheckTitleSelect()
+void master::UpdateTitleSelect()
 {
 	if (GetNowCount() - StartTime > WaitTimeMS) {
 		if (CheckHitKey(KEY_INPUT_DOWN)) {
@@ -70,6 +71,13 @@ void master::CheckTitleSelect()
 							SelectedOption + OptionSize : SelectedOption;
 			StartTime = GetNowCount();
 		}
+	}
+}
+
+void master::ExitGame()
+{
+	if (CheckHitKey(KEY_INPUT_SPACE) && SelectedOption == 2) {
+		DxLib_End();
 	}
 }
 

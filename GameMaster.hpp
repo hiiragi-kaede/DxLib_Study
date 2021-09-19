@@ -8,5 +8,6 @@ namespace master {
 	GameState GetGameState();
 	void SetGameState(master::GameState state);
 	void CheckGameStart();
-	void CheckTitleSelect();
+	void UpdateTitleSelect();
+	void ExitGame();
 }
