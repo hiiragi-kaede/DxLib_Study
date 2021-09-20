@@ -25,7 +25,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine
 		{
 		case master::GameState::Title:
 			master::drawTitleScene();
-			master::Update();
+			master::TitleUpdate();
 			break;
 		case master::GameState::Game:
 			pl::Update();
@@ -33,6 +33,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine
 			ene::Update();
 
 			util::EscToTitle();
+			break;
+		case master::GameState::Config:
+			master::ConfigUpdate();
 			break;
 		default:
 			break;
