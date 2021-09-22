@@ -75,10 +75,15 @@ class Enemy :public Character{
 		int damageGraph;
 		EnemyShot shot;
 		int shotCounter;
+		int MaxHP;
+		int HP;
 
 	public:
-		Enemy(int x, int y, int graph, int hitW, int hitH, int dir, int dFlag, int dCounter, int dGraph, EnemyShot* es, int sCounter);
-		Enemy(int x, int y, int graph, int hitSize, int dir, int dFlag, int dCounter, int dGraph, EnemyShot* es, int sCounter);
+		Enemy(int x, int y, int graph, int hitW, int hitH, int MaxHP, int dir, int dFlag, int dCounter, int dGraph, EnemyShot* es, int sCounter);
+		Enemy(int x, int y, int graph, int hitSize, int MaxHP, int dir, int dFlag, int dCounter, int dGraph, EnemyShot* es, int sCounter);
+		int getHP();
+		void DecreaseHP(int damage);
+		void IncreaseHP(int heal);
 		int getDir();
 		void setDir(int dir);
 		int getDamageFlag();
@@ -91,4 +96,3 @@ class Enemy :public Character{
 		int getShotCounter();
 		void setShotCounter(int count);
 };
-

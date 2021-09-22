@@ -55,11 +55,49 @@ void Character::setY(int y) {
 	this->y = y;
 }
 
-Enemy::Enemy(int x, int y, int graph, int hitW, int hitH, int dir, int dFlag, int dCounter, int dGraph, EnemyShot* es, int sCounter):
-	Character(x, y, graph, hitW, hitH), dir(dir), damageFlag(dFlag), damageCounter(dCounter), damageGraph(dGraph), shot(es), shotCounter(sCounter) {}
+Player::Player(int x, int y, int graph, int hitSize, int MaxHP) : Character(x, y, graph, hitSize), MaxHP(MaxHP), HP(MaxHP) {}
 
-Enemy::Enemy(int x, int y, int graph, int hitSize, int dir, int dFlag, int dCounter, int dGraph, EnemyShot* es, int sCounter):
-	Character(x, y, graph, hitSize), dir(dir), damageFlag(dFlag), damageCounter(dCounter), damageGraph(dGraph), shot(es), shotCounter(sCounter) {}
+Player::Player(int x, int y, int graph, int hitW, int hitH, int MaxHP) : Character(x, y, graph, hitW, hitH), MaxHP(MaxHP), HP(MaxHP) {}
+
+int Player::getHP()
+{
+	return Player::HP;
+}
+
+void Player::DecreaseHP(int damage)
+{
+	this->HP -= damage;
+	if (this->HP < 0) this->HP = 0;
+}
+
+void Player::IncreaseHP(int heal)
+{
+	this->HP += heal;
+	if (this->HP > this->MaxHP) this->HP = this->MaxHP;
+}
+
+Enemy::Enemy(int x, int y, int graph, int hitW, int hitH, int MaxHP, int dir, int dFlag, int dCounter, int dGraph, EnemyShot* es, int sCounter) :
+	Character(x, y, graph, hitW, hitH), MaxHP(MaxHP), HP(MaxHP), dir(dir), damageFlag(dFlag), damageCounter(dCounter), damageGraph(dGraph), shot(es), shotCounter(sCounter) {}
+
+Enemy::Enemy(int x, int y, int graph, int hitSize, int MaxHP, int dir, int dFlag, int dCounter, int dGraph, EnemyShot* es, int sCounter) :
+	Character(x, y, graph, hitSize), MaxHP(MaxHP), HP(MaxHP), dir(dir), damageFlag(dFlag), damageCounter(dCounter), damageGraph(dGraph), shot(es), shotCounter(sCounter) {}
+
+int Enemy::getHP()
+{
+	return Enemy::HP;
+}
+
+void Enemy::DecreaseHP(int damage)
+{
+	this->HP -= damage;
+	if (this->HP < 0) this->HP = 0;
+}
+
+void Enemy::IncreaseHP(int heal)
+{
+	this->HP += heal;
+	if (this->HP > this->MaxHP) this->HP = this->MaxHP;
+}
 
 int Enemy::getDir() {
 	return Enemy::dir;
@@ -158,25 +196,4 @@ double EnemyShot::getDy()
 void EnemyShot::setDy(double dy)
 {
 	this->dy = dy;
-}
-
-Player::Player(int x, int y, int graph, int hitSize, int MaxHP) : Character(x, y, graph, hitSize), MaxHP(MaxHP), HP(MaxHP) {}
-
-Player::Player(int x, int y, int graph, int hitW, int hitH, int MaxHP) : Character(x, y, graph, hitW, hitH), MaxHP(MaxHP), HP(MaxHP) {}
-
-int Player::getHP()
-{
-	return Player::HP;
-}
-
-void Player::DecreaseHP(int damage)
-{
-	this->HP -= damage;
-	if (this->HP < 0) this->HP = 0;
-}
-
-void Player::IncreaseHP(int heal)
-{
-	this->HP += heal;
-	if (this->HP > this->MaxHP) this->HP = this->MaxHP;
 }

@@ -8,6 +8,7 @@
 namespace ene {
 	void Instantiate();
 	void Update();
+	void UpdateHPView();
 }
 
 void UpdateEnemy(Player* player);

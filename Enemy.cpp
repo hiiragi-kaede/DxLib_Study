@@ -3,15 +3,17 @@
 #include"DxLib.h"
 #include"Player.hpp"
 #include<vector>
+#include<string>
 
 static EnemyShot* es;
 static Enemy* enemy;
 //プレイヤーへの攻撃力
 static const int attack = 1;
+static const int MaxHP = 1000;
 
 void ene::Instantiate() {
 	es = new EnemyShot(0, 0, LoadGraph("img/EnemyShot.png"), 10, 0);
-	enemy = new Enemy(0, 50, LoadGraph("img/EnemyImg.png"), 50,
+	enemy = new Enemy(0, 50, LoadGraph("img/EnemyImg.png"), 50, MaxHP,
 		1, 0, 0, LoadGraph("img/EnemyInDmg.png"),
 		es, 0);
 }
@@ -21,8 +23,19 @@ void ene::Update()
 	Player* player = pl::getPlayer();
 	std::vector<Shot*> shots = pl::getShots();
 	UpdateEnemy(player);
+	ene::UpdateHPView();
 	HitCheck(shots);
 	AttackPlayer(player);
+}
+
+void ene::UpdateHPView()
+{
+	//赤色の値を取得
+	unsigned int Cr = GetColor(255, 0, 0);
+
+	std::string tmp = "Ene HP:" + std::to_string(enemy->getHP());
+	char const* hp_char = tmp.c_str();
+	DrawString(300, 0, hp_char, Cr);
 }
 
 void UpdateEnemyShotView() {
@@ -139,6 +152,8 @@ void HitCheck(std::vector<Shot*> shots) {
 
 				enemy->setDamageFlag(1);
 				enemy->setDamageCounter(0);
+
+				enemy->DecreaseHP(1);
 			}
 		}
 	}
