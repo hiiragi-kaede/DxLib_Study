@@ -7,6 +7,7 @@
 #include"Enemy.hpp"
 #include"GameMaster.hpp"
 #include"Config.hpp"
+#include"GameOver.hpp"
 
 //プログラムはWinMainから始まる。
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine, int nCmdShow) {
@@ -36,7 +37,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine
 			util::EscToTitle();
 			break;
 		case master::GameState::Config:
-			cfg::ConfigUpdate();
+			cfg::Update();
+			break;
+		case master::GameState::GameOver:
+			over::Update();
 			break;
 		default:
 			break;

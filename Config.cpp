@@ -21,7 +21,7 @@ static const int MaxVol = 10;
 static const int WaitTimeMS = 150;
 static int StartTime = 0;
 
-void cfg::ConfigUpdate()
+void cfg::Update()
 {
 	cfg::UpdateConfigSelect();
 	cfg::ChangeConfig();
@@ -105,7 +105,7 @@ void cfg::ChangeConfig()
 			if (CheckHitKey(KEY_INPUT_SPACE)) {
 				master::SetGameState(master::GameState::Title);
 				StartTime = GetNowCount();
-				WaitTimer(150);
+				WaitTimer(300);
 			}
 		}
 		break;

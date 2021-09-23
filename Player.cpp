@@ -112,7 +112,8 @@ void UpdateHPView()
 void CheckGameOver()
 {
 	if (player->getHP() == 0) {
-		master::SetGameState(master::GameState::Title);
+		pl::Instantiate();
+		master::SetGameState(master::GameState::GameOver);
 	}
 }
 

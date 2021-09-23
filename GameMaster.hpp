@@ -1,7 +1,7 @@
 #pragma once
 
 namespace master {
-	enum class GameState { Title, Game, Config };
+	enum class GameState { Title, Game, Config, GameOver };
 
 	void drawTitleScene();
 	void drawTitles();

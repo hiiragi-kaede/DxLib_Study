@@ -154,6 +154,7 @@
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="Config.cpp" />
     <ClCompile Include="GameMaster.cpp" />
+    <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -164,6 +165,7 @@
     <ClInclude Include="Config.hpp" />
     <ClInclude Include="Enemy.hpp" />
     <ClInclude Include="GameMaster.hpp" />
+    <ClInclude Include="GameOver.hpp" />
     <ClInclude Include="Player.hpp" />
     <ClInclude Include="util.hpp" />
   </ItemGroup>

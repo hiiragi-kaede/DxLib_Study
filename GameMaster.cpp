@@ -101,7 +101,7 @@ void master::MoveToConfig()
 		if (CheckHitKey(KEY_INPUT_SPACE) && TitleSelectNum == 1) {
 			master::SetGameState(master::GameState::Config);
 			StartTime = GetNowCount();
-			WaitTimer(150);
+			WaitTimer(300);
 		}
 	}
 }
