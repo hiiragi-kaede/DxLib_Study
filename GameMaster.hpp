@@ -3,6 +3,8 @@
 namespace master {
 	enum class GameState { Title, Game, Config, GameOver };
 
+	void Update();
+
 	void drawTitleScene();
 	void drawTitles();
 	void UpdateTitleSelect();

@@ -4,6 +4,8 @@
 #include"Enemy.hpp"
 #include"string"
 #include"Config.hpp"
+#include"GameOver.hpp"
+#include"util.hpp"
 
 static master::GameState gameState = master::GameState::Title;
 
@@ -18,6 +20,32 @@ static int TitleSelectNum = 0;
 
 static const int WaitTimeMS = 150;
 static int StartTime = 0;
+
+void master::Update()
+{
+	switch (master::GetGameState())
+	{
+	case master::GameState::Title:
+		master::drawTitleScene();
+		master::TitleUpdate();
+		break;
+	case master::GameState::Game:
+		pl::Update();
+
+		ene::Update();
+
+		util::EscToTitle();
+		break;
+	case master::GameState::Config:
+		cfg::Update();
+		break;
+	case master::GameState::GameOver:
+		over::Update();
+		break;
+	default:
+		break;
+	}
+}
 
 void master::drawTitleScene()
 {
@@ -59,6 +87,7 @@ void master::CheckGameStart()
 		SetGameState(master::GameState::Game);
 		pl::Instantiate();
 		ene::Instantiate();
+		WaitTimer(300);
 	}
 }
 

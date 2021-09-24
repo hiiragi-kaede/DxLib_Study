@@ -9,11 +9,12 @@ static EnemyShot* es;
 static Enemy* enemy;
 //ƒvƒŒƒCƒ„[‚Ö‚ÌUŒ‚—Í
 static const int attack = 1;
+static const int HitSize = 50;
 static const int MaxHP = 1000;
 
 void ene::Instantiate() {
 	es = new EnemyShot(0, 0, LoadGraph("img/EnemyShot.png"), 10, 0);
-	enemy = new Enemy(0, 50, LoadGraph("img/EnemyImg.png"), 50, MaxHP,
+	enemy = new Enemy(0, 50, LoadGraph("img/EnemyImg.png"), HitSize, MaxHP,
 		1, 0, 0, LoadGraph("img/EnemyInDmg.png"),
 		es, 0);
 }

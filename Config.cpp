@@ -12,7 +12,7 @@ static int SelectNum = 0;
 
 static const int DifficultSize = 3;
 static const std::string DiffStr[DifficultSize] = { "Easy","Normal","Hard" };
-static int Difficulty = 2;
+static int Difficulty = 1;
 
 static int BGMvol = 5;
 static int SEvol = 5;

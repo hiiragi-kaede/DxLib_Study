@@ -1,13 +1,5 @@
 #include"DxLib.h"
-#include"Character.hpp"
-#include<vector>
-#include<math.h>
-#include"util.hpp"
-#include"Player.hpp"
-#include"Enemy.hpp"
 #include"GameMaster.hpp"
-#include"Config.hpp"
-#include"GameOver.hpp"
 
 //プログラムはWinMainから始まる。
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine, int nCmdShow) {
@@ -23,28 +15,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine
 	while (1) {
 		ClearDrawScreen();
 		
-		switch (master::GetGameState())
-		{
-		case master::GameState::Title:
-			master::drawTitleScene();
-			master::TitleUpdate();
-			break;
-		case master::GameState::Game:
-			pl::Update();
-
-			ene::Update();
-
-			util::EscToTitle();
-			break;
-		case master::GameState::Config:
-			cfg::Update();
-			break;
-		case master::GameState::GameOver:
-			over::Update();
-			break;
-		default:
-			break;
-		}
+		master::Update();
 
 		ScreenFlip();
 
