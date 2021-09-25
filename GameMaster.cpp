@@ -45,6 +45,7 @@ void master::Update()
 	default:
 		break;
 	}
+
 }
 
 void master::drawTitleScene()

@@ -23,88 +23,117 @@ void ene::Update()
 {
 	Player* player = pl::getPlayer();
 	std::vector<Shot*> shots = pl::getShots();
-	UpdateEnemy(player);
-	ene::UpdateHPView();
-	HitCheck(shots);
-	AttackPlayer(player);
+	enemy->Update(player,shots);
+	es->Update(enemy, player);
 }
 
-void ene::UpdateHPView()
+/*
+####################################################################################################
+*/
+
+Enemy::Enemy(int x, int y, int graph, int hitW, int hitH, int MaxHP, int dir, int dFlag, int dCounter, int dGraph, EnemyShot* es, int sCounter) :
+	Character(x, y, graph, hitW, hitH), MaxHP(MaxHP), HP(MaxHP), dir(dir), damageFlag(dFlag), damageCounter(dCounter), damageGraph(dGraph), shot(es), shotCounter(sCounter) {}
+
+Enemy::Enemy(int x, int y, int graph, int hitSize, int MaxHP, int dir, int dFlag, int dCounter, int dGraph, EnemyShot* es, int sCounter) :
+	Character(x, y, graph, hitSize), MaxHP(MaxHP), HP(MaxHP), dir(dir), damageFlag(dFlag), damageCounter(dCounter), damageGraph(dGraph), shot(es), shotCounter(sCounter) {}
+
+void Enemy::Update(Player* player, std::vector<Shot*> shots)
+{
+	Enemy::UpdateEnemy(player);
+	Enemy::UpdateHPView();
+	HitCheck(shots);
+}
+
+EnemyShot::EnemyShot(int x, int y, int graph, int hitW, int hitH, int flag) :
+	Shot(x, y, graph, hitW, hitH, flag), dx(0), dy(0) {}
+
+EnemyShot::EnemyShot(int x, int y, int graph, int hitSize, int flag) :
+	Shot(x, y, graph, hitSize, flag), dx(0), dy(0) {}
+
+EnemyShot::EnemyShot(EnemyShot* es) : Shot(es->getX(), es->getY(), es->getGraph(), es->getHitW(), es->getHitH(), es->getFlag()), dx(0), dy(0) {}
+
+void EnemyShot::Update(Enemy* enemy, Player* player)
+{
+	EnemyShot::UpdateEnemyShotView();
+	//ダメージモーション中は攻撃しない
+	if (enemy->getDamageFlag() == 0) {
+		EnemyShot::EnemyShotCtrl(enemy, player);
+		EnemyShot::AttackPlayer(player);
+	}
+}
+
+void Enemy::UpdateHPView()
 {
 	//赤色の値を取得
 	unsigned int Cr = GetColor(255, 0, 0);
 
-	std::string tmp = "Ene HP:" + std::to_string(enemy->getHP());
+	std::string tmp = "Ene HP:" + std::to_string(Enemy::getHP());
 	char const* hp_char = tmp.c_str();
 	DrawString(300, 0, hp_char, Cr);
 }
 
-void UpdateEnemyShotView() {
-	if (es->getFlag() == 1) {
-		es->setX(int(es->getX() + es->getDx()));
-		es->setY(int(es->getY() + es->getDy()));
-		if (es->getY() > 480 || es->getY() < 0 ||
-			es->getX() > 640 || es->getX() < 0) {
-			es->setFlag(0);
+void EnemyShot::UpdateEnemyShotView() {
+	if (EnemyShot::getFlag() == 1) {
+		EnemyShot::setX(int(EnemyShot::getX() + EnemyShot::getDx()));
+		EnemyShot::setY(int(EnemyShot::getY() + EnemyShot::getDy()));
+		if (EnemyShot::getY() > 480 || EnemyShot::getY() < 0 ||
+			EnemyShot::getX() > 640 || EnemyShot::getX() < 0) {
+			EnemyShot::setFlag(0);
 		}
 
-		DrawGraph(es->getX(), es->getY(), es->getGraph(), TRUE);
+		DrawGraph(EnemyShot::getX(), EnemyShot::getY(), EnemyShot::getGraph(), TRUE);
 	}
 }
 
-void UpdateEnemy(Player* player) {
-	int EnemyDir = enemy->getDir();
-	int EnemyX = enemy->getX();
-	int EnemyY = enemy->getY();
+void Enemy::UpdateEnemy(Player* player) {
+	int EnemyDir = Enemy::getDir();
 
-	if (enemy->getDamageFlag() == 1) {//ダメージアニメーション中
-		DrawGraph(enemy->getX(), enemy->getY(), enemy->getDamageGraph(), TRUE);
+	if (Enemy::getDamageFlag() == 1) {//ダメージアニメーション中
+		DrawGraph(Enemy::getX(), Enemy::getY(), Enemy::getDamageGraph(), TRUE);
 
-		enemy->setDamageCounter(enemy->getDamageCounter() + 1);
+		Enemy::setDamageCounter(Enemy::getDamageCounter() + 1);
 
-		if (enemy->getDamageCounter() == 30) {
-			enemy->setDamageFlag(0);
+		if (Enemy::getDamageCounter() == 30) {
+			Enemy::setDamageFlag(0);
 		}
 	}
 	else {//ダメージアニメーション中でなければ
-		if (EnemyDir == 1) enemy->setX(enemy->getX() + 3);
-		if (EnemyDir == 0) enemy->setX(enemy->getX() - 3);
+		if (EnemyDir == 1) Enemy::setX(Enemy::getX() + 3);
+		if (EnemyDir == 0) Enemy::setX(Enemy::getX() - 3);
 
-		if (enemy->getX() > 640 - 64)
+		if (Enemy::getX() > 640 - 64)
 		{
-			enemy->setX(640 - 64);
-			enemy->setDir(0);
+			Enemy::setX(640 - 64);
+			Enemy::setDir(0);
 		}
 
-		if (enemy->getX() < 0)
+		if (Enemy::getX() < 0)
 		{
-			enemy->setX(0);
-			enemy->setDir(1);
+			Enemy::setX(0);
+			Enemy::setDir(1);
 		}
 
-		DrawGraph(enemy->getX(), enemy->getY(), enemy->getGraph(), TRUE);
+		DrawGraph(Enemy::getX(), Enemy::getY(), Enemy::getGraph(), TRUE);
 
-		EnemyShotCtrl(player);
 	}
-	UpdateEnemyShotView();
 }
 
-void EnemyShotCtrl(Player* player) {
+void EnemyShot::EnemyShotCtrl(Enemy* enemy, Player* player) {
 	enemy->setShotCounter(enemy->getShotCounter() + 1);
 
 	if (enemy->getShotCounter() == 60) {
-		if (es->getFlag() == 0) {
+		if (EnemyShot::getFlag() == 0) {
 			int esW, esH, EneW, EneH;
 			GetGraphSize(enemy->getGraph(), &EneW, &EneH);
 			GetGraphSize(enemy->getShot()->getGraph(), &esW, &esH);
 
-			es->setX(enemy->getX() + EneW / 2 - esW / 2);
-			es->setY(enemy->getY() + EneH / 2 - esH / 2);
+			EnemyShot::setX(enemy->getX() + EneW / 2 - esW / 2);
+			EnemyShot::setY(enemy->getY() + EneH / 2 - esH / 2);
 
 			//弾の移動速度を設定する
 			double sb, sbx, sby, bx, by, sx, sy;
-			sx = es->getX() + esW / 2.0;
-			sy = es->getY() + esH / 2.0;
+			sx = EnemyShot::getX() + esW / 2.0;
+			sy = EnemyShot::getY() + esH / 2.0;
 
 			int Pw, Ph;
 			GetGraphSize(player->getGraph(), &Pw, &Ph);
@@ -116,34 +145,34 @@ void EnemyShotCtrl(Player* player) {
 
 			sb = sqrt(sbx * sbx + sby * sby);
 
-			es->setDx(sbx / sb * 8);
-			es->setDy(sby / sb * 8);
+			EnemyShot::setDx(sbx / sb * 8);
+			EnemyShot::setDy(sby / sb * 8);
 
-			es->setFlag(1);
+			EnemyShot::setFlag(1);
 		}
 		enemy->setShotCounter(0);
 	}
 }
 
-void AttackPlayer(Player* player)
+void EnemyShot::AttackPlayer(Player* player)
 {
-	if (es->getFlag() == 1) {
+	if (EnemyShot::getFlag() == 1) {
 		HitBox PlayerHitBox = player->getHitBox();
-		HitBox EShotHitBox = es->getHitBox();
+		HitBox EShotHitBox = EnemyShot::getHitBox();
 
 		if (HitBoxCheck(PlayerHitBox, EShotHitBox)) {
 			//接触した場合弾は消える
-			es->setFlag(0);
+			EnemyShot::setFlag(0);
 
 			player->DecreaseHP(attack);
 		}
 	}
 }
 
-void HitCheck(std::vector<Shot*> shots) {
+void Enemy::HitCheck(std::vector<Shot*> shots) {
 	for (auto shot : shots) {
 		if (shot->getFlag() == 1) {
-			HitBox EneHitBox = enemy->getHitBox();
+			HitBox EneHitBox = Enemy::getHitBox();
 			HitBox ShotHitBox = shot->getHitBox();
 
 			if (HitBoxCheck(EneHitBox, ShotHitBox)) {
@@ -151,10 +180,10 @@ void HitCheck(std::vector<Shot*> shots) {
 				//接触した場合弾は消える
 				shot->setFlag(0);
 
-				enemy->setDamageFlag(1);
-				enemy->setDamageCounter(0);
+				Enemy::setDamageFlag(1);
+				Enemy::setDamageCounter(0);
 
-				enemy->DecreaseHP(1);
+				Enemy::DecreaseHP(1);
 			}
 		}
 	}

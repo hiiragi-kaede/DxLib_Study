@@ -23,9 +23,7 @@ void pl::Instantiate() {
 }
 
 void pl::Update() {
-	UpdatePlayer();
-	UpdateHPView();
-	CheckGameOver();
+	player->Update();
 }
 
 Player* pl::getPlayer()
@@ -38,20 +36,43 @@ std::vector<Shot*> pl::getShots()
 	return shots;
 }
 
-void UpdatePlayer() {
+/*
+####################################################################################################
+*/
 
-	if (CheckHitKey(KEY_INPUT_UP) == 1) player->setY(player->getY() - move_speed);
-	if (CheckHitKey(KEY_INPUT_DOWN) == 1) player->setY(player->getY() + move_speed);
-	if (CheckHitKey(KEY_INPUT_LEFT) == 1) player->setX(player->getX() - move_speed);
-	if (CheckHitKey(KEY_INPUT_RIGHT) == 1) player->setX(player->getX() + move_speed);
+Shot::Shot(int x, int y, int graph, int hitW, int hitH, int flag) : Character(x, y, graph, hitW, hitH), flag(flag) {}
 
-	if (player->getX() < 0) player->setX(0);
-	if (player->getX() > 640 - 64) player->setX(640 - 64);
+Shot::Shot(int x, int y, int graph, int hitSize, int flag) : Character(x, y, graph, hitSize), flag(flag) {}
 
-	if (player->getY() < 0) player->setY(0);
-	if (player->getY() > 480 - 64) player->setY(480 - 64);
+Shot::Shot() : Character(0, 0, 0, shot_hitbox_size), flag(0) {}
 
-	util::DrawRotaGraph(player->getX(), player->getY(), 1.0, 0, player->getGraph(), TRUE);
+Shot::Shot(Shot* s) : Character(s->getX(), s->getY(), s->getGraph(), s->getHitW(), s->getHitH()), flag(s->getFlag()) {}
+
+Player::Player(int x, int y, int graph, int hitSize, int MaxHP) : Character(x, y, graph, hitSize), MaxHP(MaxHP), HP(MaxHP) {}
+
+Player::Player(int x, int y, int graph, int hitW, int hitH, int MaxHP) : Character(x, y, graph, hitW, hitH), MaxHP(MaxHP), HP(MaxHP) {}
+
+void Player::Update()
+{
+	UpdatePlayer();
+	UpdateHPView();
+	CheckGameOver();
+}
+
+void Player::UpdatePlayer() {
+
+	if (CheckHitKey(KEY_INPUT_UP) == 1) Player::setY(Player::getY() - move_speed);
+	if (CheckHitKey(KEY_INPUT_DOWN) == 1) Player::setY(Player::getY() + move_speed);
+	if (CheckHitKey(KEY_INPUT_LEFT) == 1) Player::setX(Player::getX() - move_speed);
+	if (CheckHitKey(KEY_INPUT_RIGHT) == 1) Player::setX(Player::getX() + move_speed);
+
+	if (Player::getX() < 0) Player::setX(0);
+	if (Player::getX() > 640 - 64) Player::setX(640 - 64);
+
+	if (Player::getY() < 0) Player::setY(0);
+	if (Player::getY() > 480 - 64) Player::setY(480 - 64);
+
+	util::DrawRotaGraph(Player::getX(), Player::getY(), 1.0, 0, Player::getGraph(), TRUE);
 
 	if (CheckHitKey(KEY_INPUT_SPACE) == 1) {
 		if (shotBflag == 0) {
@@ -70,36 +91,36 @@ void UpdatePlayer() {
 
 	for (size_t i = 0; i < shots.size(); i++) {
 		if (shots[i]->getFlag() == 1) {
-			UpdateShotView(shots[i]);
+			shots[i]->UpdateShotView();
 		}
 	}
 }
 
-void UpdateShotState(Shot* shot) {
+void Player::UpdateShotState(Shot* shot) {
 	int Pw, Ph, Sw, Sh;
 
-	GetGraphSize(player->getGraph(), &Pw, &Ph);
+	GetGraphSize(Player::getGraph(), &Pw, &Ph);
 	GetGraphSize(shot->getGraph(), &Sw, &Sh);
 
-	shot->setX((Pw - Sw) / 2 + player->getX());
-	shot->setY((Ph - Sh) / 2 + player->getY());
+	shot->setX((Pw - Sw) / 2 + Player::getX());
+	shot->setY((Ph - Sh) / 2 + Player::getY());
 
 	shot->setFlag(1);
 }
 
 
-void UpdateShotView(Shot* shot) {
-	if (shot->getFlag() == 1) {
-		shot->setY(shot->getY() - 16);
-		if (shot->getY() < -80) {
-			shot->setFlag(0);
+void Shot::UpdateShotView() {
+	if (Shot::getFlag() == 1) {
+		Shot::setY(Shot::getY() - 16);
+		if (Shot::getY() < -80) {
+			Shot::setFlag(0);
 		}
 
-		DrawGraph(shot->getX(), shot->getY(), shot->getGraph(), TRUE);
+		DrawGraph(Shot::getX(), Shot::getY(), Shot::getGraph(), TRUE);
 	}
 }
 
-void UpdateHPView()
+void Player::UpdateHPView()
 {
 	//”’F‚Ì’l‚ðŽæ“¾
 	unsigned int Cr = GetColor(255, 255, 255);
@@ -109,7 +130,7 @@ void UpdateHPView()
 	DrawString(0, 0, hp_char, Cr);
 }
 
-void CheckGameOver()
+void Player::CheckGameOver()
 {
 	if (player->getHP() == 0) {
 		pl::Instantiate();

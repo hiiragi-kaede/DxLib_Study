@@ -1,5 +1,7 @@
 #pragma once
 
+#include"DxLib.h"
+
 class HitBox {
 	public:
 		int Left, Up;
@@ -18,81 +20,45 @@ class Character {
 	public:
 		Character(int x, int y, int graph,int hitSize);
 		Character(int x, int y, int graph, int hitW, int hitH);
-		int getX();
-		int getY();
-		int getGraph();
-		int getHitW();
-		int getHitH();
-		HitBox getHitBox();
-		void setX(int x);
-		void setY(int y);
-};
+		
+		int getX() {
+			return Character::x;
+		}
 
-class Player :public Character{
-	private:
-		int MaxHP;
-		int HP;
-	public:
-		Player(int x, int y, int graph, int hitSize, int MaxHP);
-		Player(int x, int y, int graph, int hitW, int hitH, int MaxHP);
-		int getHP();
-		void DecreaseHP(int damage);
-		void IncreaseHP(int heal);
-};
+		int getY() {
+			return Character::y;
+		}
 
-class Shot :public Character {
-	private:
-		int flag;
+		int getGraph() {
+			return Character::graph;
+		}
 
-	public:
-		Shot(int x, int y, int graph, int hitW, int hitH, int flag);
-		Shot(int x, int y, int graph, int hitSize, int flag);
-		Shot();
-		Shot(Shot* s);
-		int getFlag();
-		void setFlag(int flag);
-};
+		int getHitW()
+		{
+			return Character::hitW;
+		}
 
-class EnemyShot :public Shot {
-	private:
-		double dx;
-		double dy;
-	public:
-		EnemyShot(int x, int y, int graph, int hitW, int hitH, int flag);
-		EnemyShot(int x, int y, int graph, int hitSize, int flag);
-		EnemyShot(EnemyShot* es);
-		double getDx();
-		void setDx(double dx);
-		double getDy();
-		void setDy(double dy);
-};
+		int getHitH()
+		{
+			return Character::hitH;
+		}
 
-class Enemy :public Character{
-	private:
-		int dir;
-		int damageFlag;
-		int damageCounter;
-		int damageGraph;
-		EnemyShot shot;
-		int shotCounter;
-		int MaxHP;
-		int HP;
+		HitBox getHitBox()
+		{
+			int GraphW, GraphH;
+			GetGraphSize(Character::getGraph(), &GraphW, &GraphH);
+			int W = Character::getHitW();
+			int H = Character::getHitH();
+			int Left = Character::getX() + GraphW / 2 - W / 2;
+			int Up = Character::getY() + GraphH / 2 - H / 2;
+			return HitBox(Left, Up, W, H);
+		}
 
-	public:
-		Enemy(int x, int y, int graph, int hitW, int hitH, int MaxHP, int dir, int dFlag, int dCounter, int dGraph, EnemyShot* es, int sCounter);
-		Enemy(int x, int y, int graph, int hitSize, int MaxHP, int dir, int dFlag, int dCounter, int dGraph, EnemyShot* es, int sCounter);
-		int getHP();
-		void DecreaseHP(int damage);
-		void IncreaseHP(int heal);
-		int getDir();
-		void setDir(int dir);
-		int getDamageFlag();
-		void setDamageFlag(int damageFlag);
-		int getDamageCounter();
-		void setDamageCounter(int damageCounter);
-		int getDamageGraph();
-		EnemyShot* getShot();
-		void setShot(EnemyShot shot);
-		int getShotCounter();
-		void setShotCounter(int count);
+		void setX(int x) {
+			this->x = x;
+		}
+
+		void setY(int y) {
+			this->y = y;
+		}
 };
