@@ -14,7 +14,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine
 
 	while (1) {
 		ClearDrawScreen();
-		
+	
 		master::Update();
 
 		ScreenFlip();
@@ -23,6 +23,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine
 
 		if (CheckHitKey(KEY_INPUT_ESCAPE)) break;
 	}
+
 	DxLib_End(); //DXライブラリ使用の終了処理
 
 	return 0;

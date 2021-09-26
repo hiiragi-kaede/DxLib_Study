@@ -24,6 +24,9 @@ void pl::Instantiate() {
 
 void pl::Update() {
 	player->Update();
+	for (size_t i = 0; i < shots.size(); i++) {
+		shots[i]->Update();
+	}
 }
 
 Player* pl::getPlayer()
@@ -59,6 +62,9 @@ void Player::Update()
 	CheckGameOver();
 }
 
+/// <summary>
+/// 入力を受け取ってプレイヤーの位置を更新。銃撃や弾の描画も行う
+/// </summary>
 void Player::UpdatePlayer() {
 
 	if (CheckHitKey(KEY_INPUT_UP) == 1) Player::setY(Player::getY() - move_speed);
@@ -88,12 +94,6 @@ void Player::UpdatePlayer() {
 			shotBflag = 0;
 		}
 	}
-
-	for (size_t i = 0; i < shots.size(); i++) {
-		if (shots[i]->getFlag() == 1) {
-			shots[i]->UpdateShotView();
-		}
-	}
 }
 
 void Player::UpdateShotState(Shot* shot) {
@@ -108,6 +108,13 @@ void Player::UpdateShotState(Shot* shot) {
 	shot->setFlag(1);
 }
 
+
+void Shot::Update()
+{
+	if (Shot::getFlag() == 1) {
+		Shot::UpdateShotView();
+	}
+}
 
 void Shot::UpdateShotView() {
 	if (Shot::getFlag() == 1) {

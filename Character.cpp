@@ -3,6 +3,12 @@
 
 HitBox::HitBox(int Left, int Up, int W, int H) : Left(Left), Up(Up), W(W), H(H) {}
 
+/// <summary>
+/// 2‚Â‚ÌHitBox‚ğó‚¯æ‚èA‚»‚ê‚ç‚ªŒğ‚í‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğ”»’è‚·‚é
+/// </summary>
+/// <param name="a"></param>
+/// <param name="b"></param>
+/// <returns>2‚Â‚ÌHitBox‚ªŒğ‚í‚Á‚Ä‚¢‚é‚È‚çTrueA‚»‚¤‚Å‚È‚¯‚ê‚ÎFalse‚ğ•Ô‚·B</returns>
 bool HitBoxCheck(HitBox a, HitBox b) {
 	return ((a.Left > b.Left && a.Left < b.Left + b.W) ||
 		(b.Left > a.Left && b.Left < a.Left + a.W)) &&

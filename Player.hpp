@@ -12,6 +12,7 @@ public:
 	Shot();
 	Shot(Shot* s);
 	
+	void Update();
 	void UpdateShotView();
 
 	int getFlag() {
