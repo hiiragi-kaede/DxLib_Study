@@ -88,6 +88,11 @@ void cfg::ChangeSelectNum(int& ChangeNum, int Limit)
 	}
 }
 
+int cfg::GetDifficulty()
+{
+	return Difficulty;
+}
+
 void cfg::ChangeConfig()
 {
 	switch (SelectNum) {

@@ -5,6 +5,7 @@
 #include<iostream>
 #include<string>
 #include"GameMaster.hpp"
+#include"Config.hpp"
 
 static Player* player;
 static std::vector<Shot*> shots;
@@ -13,10 +14,14 @@ static const int move_speed = 3;
 static const int shot_size = 10;
 static const int player_hitbox_size = 32;
 static const int shot_hitbox_size = 10;
-static const int max_hp = 3;
+//ConfigÇÃdifficultSizeÇ∆ìØÇ∂Ç≈Ç»ÇØÇÍÇŒÇ»ÇÁÇ»Ç¢
+static const int diffSize = 3;
+//Easy,NormalÅCHardÇ≈ÇÃHPÇÃê›íË
+static const int max_hp[diffSize] = { 15,8,3 };
 
 void pl::Instantiate() {
-	player = new Player(288, 400, LoadGraph("img/PlayerImg.png"), player_hitbox_size, max_hp);
+	int diff = cfg::GetDifficulty();
+	player = new Player(288, 400, LoadGraph("img/PlayerImg.png"), player_hitbox_size, max_hp[diff]);
 	while (shots.size() < shot_size) {
 		shots.push_back(new Shot(0, 0, LoadGraph("img/Shot.png"), shot_hitbox_size, 0));
 	}
@@ -117,14 +122,12 @@ void Shot::Update()
 }
 
 void Shot::UpdateShotView() {
-	if (Shot::getFlag() == 1) {
-		Shot::setY(Shot::getY() - 16);
-		if (Shot::getY() < -80) {
-			Shot::setFlag(0);
-		}
-
-		DrawGraph(Shot::getX(), Shot::getY(), Shot::getGraph(), TRUE);
+	Shot::setY(Shot::getY() - 16);
+	if (Shot::getY() < -80) {
+		Shot::setFlag(0);
 	}
+
+	DrawGraph(Shot::getX(), Shot::getY(), Shot::getGraph(), TRUE);
 }
 
 void Player::UpdateHPView()

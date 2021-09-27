@@ -1,8 +1,4 @@
-﻿  Character.cpp
-D:\program\DxLibrary\DxLibTest\Character.cpp(1,9): warning C4067: プリプロセッサ ディレクティブの後に余分な文字がありました - 改行が必要です
-  Enemy.cpp
-  GameMaster.cpp
-  Main.cpp
-  Player.cpp
+﻿  Player.cpp
+  util.cpp
   コードを生成中...
   DxLibTest.vcxproj -> D:\program\DxLibrary\DxLibTest\Debug\DxLibTest.exe
