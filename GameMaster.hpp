@@ -11,6 +11,7 @@ namespace master {
 	void TitleUpdate();
 
 	void MoveToConfig();
+	void ResetSelectNum();
 
 	GameState GetGameState();
 	void SetGameState(master::GameState state);

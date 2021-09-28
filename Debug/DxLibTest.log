@@ -1,4 +1,4 @@
-﻿  Player.cpp
-  util.cpp
+﻿  GameMaster.cpp
+  GameOver.cpp
   コードを生成中...
   DxLibTest.vcxproj -> D:\program\DxLibrary\DxLibTest\Debug\DxLibTest.exe

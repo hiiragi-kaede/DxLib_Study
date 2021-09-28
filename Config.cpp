@@ -88,6 +88,11 @@ void cfg::ChangeSelectNum(int& ChangeNum, int Limit)
 	}
 }
 
+void cfg::ResetSelectNum()
+{
+	SelectNum = 0;
+}
+
 int cfg::GetDifficulty()
 {
 	return Difficulty;
@@ -109,6 +114,7 @@ void cfg::ChangeConfig()
 		if (GetNowCount() - StartTime > WaitTimeMS) {
 			if (CheckHitKey(KEY_INPUT_SPACE)) {
 				master::SetGameState(master::GameState::Title);
+				ResetSelectNum();
 				StartTime = GetNowCount();
 				WaitTimer(300);
 			}

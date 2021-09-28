@@ -6,6 +6,7 @@ namespace cfg {
 	void UpdateConfigSelect();
 	void ChangeConfig();
 	void ChangeSelectNum(int& ChangeNum, int Limit);
+	void ResetSelectNum();
 
 	int GetDifficulty();
 }

@@ -85,6 +85,7 @@ void master::CheckGameStart()
 {
 	if (CheckHitKey(KEY_INPUT_SPACE) && TitleSelectNum == 0) {
 		SetGameState(master::GameState::Game);
+		ResetSelectNum();
 		pl::Instantiate();
 		ene::Instantiate();
 		WaitTimer(300);
@@ -129,8 +130,14 @@ void master::MoveToConfig()
 	if (GetNowCount() - StartTime > WaitTimeMS) {
 		if (CheckHitKey(KEY_INPUT_SPACE) && TitleSelectNum == 1) {
 			master::SetGameState(master::GameState::Config);
+			ResetSelectNum();
 			StartTime = GetNowCount();
 			WaitTimer(300);
 		}
 	}
+}
+
+void master::ResetSelectNum()
+{
+	TitleSelectNum = 0;
 }

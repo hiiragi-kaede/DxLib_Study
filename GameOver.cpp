@@ -66,8 +66,14 @@ void over::ChangeState(master::GameState state)
 	if (GetNowCount() - StartTime > WaitTimeMS) {
 		if (CheckHitKey(KEY_INPUT_SPACE)) {
 			master::SetGameState(state);
+			ResetSelectNum();
 			StartTime = GetNowCount();
 			WaitTimer(300);
 		}
 	}
+}
+
+void over::ResetSelectNum()
+{
+	SelectNum = 0;
 }

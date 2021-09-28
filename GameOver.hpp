@@ -7,4 +7,5 @@ namespace over {
 	void UpdateGameOverSelect();
 	void CheckSelect();
 	void ChangeState(master::GameState state);
+	void ResetSelectNum();
 }
