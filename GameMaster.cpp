@@ -115,16 +115,6 @@ void master::ExitGame()
 	}
 }
 
-unsigned master::getWhite()
-{
-	return Cr_white;
-}
-
-unsigned master::getOrange()
-{
-	return Cr_orange;
-}
-
 void master::MoveToConfig()
 {
 	if (GetNowCount() - StartTime > WaitTimeMS) {

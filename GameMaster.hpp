@@ -18,7 +18,4 @@ namespace master {
 	
 	void CheckGameStart();
 	void ExitGame();
-
-	unsigned getWhite();
-	unsigned getOrange();
 }

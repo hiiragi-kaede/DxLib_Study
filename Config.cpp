@@ -1,6 +1,7 @@
 #include "Config.hpp"
 #include"GameMaster.hpp"
 #include"DxLib.h"
+#include"Color.hpp"
 #include<string>
 
 static const int ConfigSize = 4;
@@ -31,11 +32,11 @@ void cfg::Update()
 void cfg::drawConfigs()
 {
 	SetFontSize(40);
-	DrawString(100, 120, "Config", master::getWhite());
+	DrawString(100, 120, "Config", color::getWhite());
 
 	SetFontSize(15);
 	for (int i = 0; i < ConfigSize; i++) {
-		unsigned color = (i == SelectNum) ? master::getOrange() : master::getWhite();
+		unsigned color = (i == SelectNum) ? color::getOrange() : color::getWhite();
 		DrawString(TitlePos[0], TitlePos[1] + TitleDist * i, ConfigStr[i].c_str(), color);
 		std::string configMessage = "";
 		switch (i) {
@@ -51,7 +52,7 @@ void cfg::drawConfigs()
 		default:
 			break;
 		}
-		DrawString(ConfigPos[0], ConfigPos[1] + TitleDist * i, configMessage.c_str(), master::getWhite());
+		DrawString(ConfigPos[0], ConfigPos[1] + TitleDist * i, configMessage.c_str(), color::getWhite());
 	}
 }
 

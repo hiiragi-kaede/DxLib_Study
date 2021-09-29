@@ -1,6 +1,7 @@
 #include "GameOver.hpp"
 #include"GameMaster.hpp"
 #include"DxLib.h"
+#include"Color.hpp"
 #include<string>
 
 static const int GameOverSize = 2;
@@ -15,11 +16,11 @@ static int StartTime = 0;
 void over::drawGameOvers()
 {
 	SetFontSize(40);
-	DrawString(100, 120, "Game Over", master::getWhite());
+	DrawString(100, 120, "Game Over", color::getWhite());
 
 	SetFontSize(15);
 	for (int i = 0; i < GameOverSize; i++) {
-		unsigned color = (i == SelectNum) ? master::getOrange() : master::getWhite();
+		unsigned color = (i == SelectNum) ? color::getOrange() : color::getWhite();
 		DrawString(TitlePos[0], TitlePos[1] + TitleDist * i, GameOverStr[i].c_str(), color);
 	}
 }

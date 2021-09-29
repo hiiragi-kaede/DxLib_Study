@@ -1,4 +1,9 @@
-﻿  GameMaster.cpp
+﻿  Color.cpp
+  Config.cpp
+  GameMaster.cpp
   GameOver.cpp
+  Main.cpp
+  Player.cpp
+  util.cpp
   コードを生成中...
   DxLibTest.vcxproj -> D:\program\DxLibrary\DxLibTest\Debug\DxLibTest.exe
