@@ -114,7 +114,7 @@ void cfg::ChangeConfig()
 	case 3:
 		if (GetNowCount() - StartTime > WaitTimeMS) {
 			if (CheckHitKey(KEY_INPUT_SPACE)) {
-				master::SetGameState(master::GameState::Title);
+				master::SetToTitle();
 				ResetSelectNum();
 				StartTime = GetNowCount();
 				WaitTimer(300);

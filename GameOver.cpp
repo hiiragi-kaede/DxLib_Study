@@ -13,6 +13,11 @@ static int SelectNum = 0;
 static const int WaitTimeMS = 150;
 static int StartTime = 0;
 
+static void (* const ChangeGameState[2])() = {
+	master::SetToGame,
+	master::SetToTitle,
+};
+
 void over::drawGameOvers()
 {
 	SetFontSize(40);
@@ -52,21 +57,21 @@ void over::CheckSelect()
 {
 	switch (SelectNum) {
 	case 0:
-		ChangeState(master::GameState::Game);
+		ChangeState(0);
 		break;
 	case 1:
-		ChangeState(master::GameState::Title);
+		ChangeState(1);
 		break;
 	default:
 		break;
 	}
 }
 
-void over::ChangeState(master::GameState state)
+void over::ChangeState(int i)
 {
 	if (GetNowCount() - StartTime > WaitTimeMS) {
 		if (CheckHitKey(KEY_INPUT_SPACE)) {
-			master::SetGameState(state);
+			ChangeGameState[i]();
 			ResetSelectNum();
 			StartTime = GetNowCount();
 			WaitTimer(300);

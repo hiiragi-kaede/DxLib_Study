@@ -1,7 +1,6 @@
 #pragma once
 
 namespace master {
-	enum class GameState { Title, Game, Config, GameOver };
 
 	void Update();
 
@@ -13,8 +12,10 @@ namespace master {
 	void MoveToConfig();
 	void ResetSelectNum();
 
-	GameState GetGameState();
-	void SetGameState(master::GameState state);
+	void SetToTitle();
+	void SetToGame();
+	void SetToConfig();
+	void SetToGameOver();
 	
 	void CheckGameStart();
 	void ExitGame();

@@ -11,6 +11,6 @@ int util::DrawRotaGraph(int x, int y, double ExtRate, double Angle, int GrHandle
 void util::EscToTitle()
 {
 	if (CheckHitKey(KEY_INPUT_DELETE)) {
-		master::SetGameState(master::GameState::Title);
+		master::SetToTitle();
 	}
 }

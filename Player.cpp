@@ -144,7 +144,7 @@ void Player::CheckGameOver()
 {
 	if (player->getHP() == 0) {
 		pl::Instantiate();
-		master::SetGameState(master::GameState::GameOver);
+		master::SetToGameOver();
 	}
 }
 

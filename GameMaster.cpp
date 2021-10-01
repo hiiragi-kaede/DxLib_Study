@@ -7,7 +7,9 @@
 #include"GameOver.hpp"
 #include"util.hpp"
 
-static master::GameState gameState = master::GameState::Title;
+enum class GameState { Title, Game, Config, GameOver };
+
+static GameState gameState = GameState::Title;
 
 static const unsigned Cr_white = GetColor(255, 255, 255);
 static const unsigned Cr_orange = GetColor(255, 45, 00);
@@ -23,23 +25,23 @@ static int StartTime = 0;
 
 void master::Update()
 {
-	switch (master::GetGameState())
+	switch (gameState)
 	{
-	case master::GameState::Title:
+	case GameState::Title:
 		master::drawTitleScene();
 		master::TitleUpdate();
 		break;
-	case master::GameState::Game:
+	case GameState::Game:
 		pl::Update();
 
 		ene::Update();
 
 		util::EscToTitle();
 		break;
-	case master::GameState::Config:
+	case GameState::Config:
 		cfg::Update();
 		break;
-	case master::GameState::GameOver:
+	case GameState::GameOver:
 		over::Update();
 		break;
 	default:
@@ -71,20 +73,11 @@ void master::TitleUpdate()
 	master::ExitGame();
 }
 
-master::GameState master::GetGameState()
-{
-	return gameState;
-}
-
-void master::SetGameState(master::GameState state)
-{
-	gameState = state;
-}
 
 void master::CheckGameStart()
 {
 	if (CheckHitKey(KEY_INPUT_SPACE) && TitleSelectNum == 0) {
-		SetGameState(master::GameState::Game);
+		SetToGame();
 		ResetSelectNum();
 		pl::Instantiate();
 		ene::Instantiate();
@@ -119,7 +112,7 @@ void master::MoveToConfig()
 {
 	if (GetNowCount() - StartTime > WaitTimeMS) {
 		if (CheckHitKey(KEY_INPUT_SPACE) && TitleSelectNum == 1) {
-			master::SetGameState(master::GameState::Config);
+			master::SetToConfig();
 			ResetSelectNum();
 			StartTime = GetNowCount();
 			WaitTimer(300);
@@ -130,4 +123,24 @@ void master::MoveToConfig()
 void master::ResetSelectNum()
 {
 	TitleSelectNum = 0;
+}
+
+void master::SetToTitle()
+{
+	gameState = GameState::Title;
+}
+
+void master::SetToGame()
+{
+	gameState = GameState::Game;
+}
+
+void master::SetToConfig()
+{
+	gameState = GameState::Config;
+}
+
+void master::SetToGameOver()
+{
+	gameState = GameState::GameOver;
 }

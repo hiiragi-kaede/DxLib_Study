@@ -6,6 +6,6 @@ namespace over {
 	void Update();
 	void UpdateGameOverSelect();
 	void CheckSelect();
-	void ChangeState(master::GameState state);
+	void ChangeState(int i);
 	void ResetSelectNum();
 }
